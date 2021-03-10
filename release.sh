@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.0.1
+# Current Version: 1.0.2
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -10,15 +10,14 @@
 function GetData() {
     iana_default=(
         "https://ftp.afrinic.net/pub/stats/afrinic/delegated-afrinic-latest"
-        "https://ftp.apnic.net/pub/stats/apnic/delegated-apnic-latest"
-        "https://ftp.apnic.net/pub/stats/iana/delegated-iana-latest"
-        "https://ftp.arin.net/pub/stats/arin/delegated-arin-latest"
+        "https://ftp.apnic.net/stats/apnic/delegated-apnic-latest"
+        "https://ftp.apnic.net/stats/iana/delegated-iana-latest"
         "https://ftp.lacnic.net/pub/stats/lacnic/delegated-lacnic-latest"
         "https://ftp.ripe.net/ripe/stats/delegated-ripencc-latest"
     )
     iana_extended=(
         "https://ftp.afrinic.net/pub/stats/afrinic/delegated-afrinic-extended-latest"
-        "https://ftp.apnic.net/pub/stats/apnic/delegated-apnic-extended-latest"
+        "https://ftp.apnic.net/stats/apnic/delegated-apnic-extended-latest"
         "https://ftp.arin.net/pub/stats/arin/delegated-arin-extended-latest"
         "https://ftp.lacnic.net/pub/stats/lacnic/delegated-lacnic-extended-latest"
         "https://ftp.ripe.net/ripe/stats/delegated-ripencc-extended-latest"
