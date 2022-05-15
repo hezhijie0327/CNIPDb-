@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.1.1
+# Current Version: 1.1.2
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -9,6 +9,8 @@
 # Get Data
 function GetData() {
     geoip_cn=(
+        "https://ispip.clang.cn/all_cn_ipv6.txt"
+        "https://ispip.clang.cn/all_cn.txt"
         "https://raw.githubusercontent.com/Loyalsoldier/geoip/release/text/cn.txt"
         "https://raw.githubusercontent.com/gaoyifan/china-operator-ip/ip-lists/china6.txt"
         "https://raw.githubusercontent.com/gaoyifan/china-operator-ip/ip-lists/china.txt"
