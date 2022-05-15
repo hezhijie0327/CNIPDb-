@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.1.0
+# Current Version: 1.1.1
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -42,8 +42,8 @@ function GetData() {
 }
 # Analyse Data
 function AnalyseData() {
-    geoip_cn_ipv4_data=($(cat ./geoip_cn.tmp | grep -v ':|#' | grep '.' | sort | uniq | awk "{ print $2 }"))
-    geoip_cn_ipv6_data=($(cat ./geoip_cn.tmp | grep -v '.|#' | grep ':' | sort | uniq | awk "{ print $2 }"))
+    geoip_cn_ipv4_data=($(cat ./geoip_cn.tmp | grep -v "\:\|\#" | grep '.' | sort | uniq | awk "{ print $2 }"))
+    geoip_cn_ipv6_data=($(cat ./geoip_cn.tmp | grep -v "\.\|\#" | grep ':' | sort | uniq | awk "{ print $2 }"))
     iana_ipv4_data=($(cat ./iana_default.tmp ./iana_extended.tmp | grep "CN|ipv4" | sort | uniq | awk "{ print $2 }"))
     iana_ipv6_data=($(cat ./iana_default.tmp ./iana_extended.tmp | grep "CN|ipv6" | sort | uniq | awk "{ print $2 }"))
 }
