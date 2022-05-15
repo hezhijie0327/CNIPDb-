@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.0.4
+# Current Version: 1.0.5
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -12,7 +12,6 @@ function GetData() {
         "https://raw.githubusercontent.com/Loyalsoldier/geoip/release/text/cn.txt"
         "https://raw.githubusercontent.com/gaoyifan/china-operator-ip/ip-lists/china6.txt"
         "https://raw.githubusercontent.com/gaoyifan/china-operator-ip/ip-lists/china.txt"
-        "https://raw.githubusercontent.com/misakaio/chnroutes2/master/chnroutes.txt"
         "https://raw.githubusercontent.com/v2fly/geoip/release/text/cn.txt"
     )
     iana_default=(
