@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.0.6
+# Current Version: 1.0.7
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -38,7 +38,7 @@ function GetData() {
     for iana_extended_task in "${!iana_extended[@]}"; do
         curl -s --connect-timeout 15 "${iana_extended[$iana_extended_task]}" >> ./iana_extended.tmp
     done
-    curl -s --connect-timeout 15 https://github.com/zhanhb/cidr-merger/releases/download/v$(curl -s --connect-timeout 15 "https://api.github.com/repos/zhanhb/cidr-merger/git/matching-refs/tags" | jq -Sr ".[].ref" | grep "^refs/tags/v" | tail -n 1 | sed "s/refs\/tags\/v//")/cidr-merger-$(uname -o | tr 'A-Z' 'a-z')-$(uname -m) > ./cidr-merger && chmod +x ./cidr-merger
+    wget https://github.com/zhanhb/cidr-merger/releases/download/v$(curl -s --connect-timeout 15 "https://api.github.com/repos/zhanhb/cidr-merger/git/matching-refs/tags" | jq -Sr ".[].ref" | grep "^refs/tags/v" | tail -n 1 | sed "s/refs\/tags\/v//")/cidr-merger-$(uname -o | tr 'A-Z' 'a-z')-$(uname -m) && mv ./cidr-merger* ./cidr-merger && chmod +x ./cidr-merger
 }
 # Analyse Data
 function AnalyseData() {
