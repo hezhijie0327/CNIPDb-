@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.0.8
+# Current Version: 1.0.9
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -28,7 +28,7 @@ function GetData() {
         "https://ftp.lacnic.net/pub/stats/lacnic/delegated-lacnic-extended-latest"
         "https://ftp.ripe.net/ripe/stats/delegated-ripencc-extended-latest"
     )
-    rm -rf ./cnipdb_* ./Temp && mkdir ./Temp && cd ./Temp
+    rm -rf ./cnipdb_* ./Temp && mkdir ./Temp && cd ./Temp && wget https://github.com/zhanhb/cidr-merger/releases/download/v$(curl -s --connect-timeout 15 "https://api.github.com/repos/zhanhb/cidr-merger/git/matching-refs/tags" | jq -Sr ".[].ref" | grep "^refs/tags/v" | tail -n 1 | sed "s/refs\/tags\/v//")/cidr-merger-linux-amd64 && mv ./cidr-merger-linux-amd64 ./cidr-merger && chmod +x ./cidr-merger
     for geoip_cn_task in "${!geoip_cn[@]}"; do
         curl -s --connect-timeout 15 "${geoip_cn[$geoip_cn_task]}" >> ./geoip_cn.tmp
     done
@@ -38,7 +38,6 @@ function GetData() {
     for iana_extended_task in "${!iana_extended[@]}"; do
         curl -s --connect-timeout 15 "${iana_extended[$iana_extended_task]}" >> ./iana_extended.tmp
     done
-    wget https://github.com/zhanhb/cidr-merger/releases/download/v$(curl -s --connect-timeout 15 "https://api.github.com/repos/zhanhb/cidr-merger/git/matching-refs/tags" | jq -Sr ".[].ref" | grep "^refs/tags/v" | tail -n 1 | sed "s/refs\/tags\/v//")/cidr-merger-linux-amd64 && mv ./cidr-merger-linux-amd64 ./cidr-merger && chmod +x ./cidr-merger
 }
 # Analyse Data
 function AnalyseData() {
