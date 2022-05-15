@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.0.7
+# Current Version: 1.0.8
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -38,7 +38,7 @@ function GetData() {
     for iana_extended_task in "${!iana_extended[@]}"; do
         curl -s --connect-timeout 15 "${iana_extended[$iana_extended_task]}" >> ./iana_extended.tmp
     done
-    wget https://github.com/zhanhb/cidr-merger/releases/download/v$(curl -s --connect-timeout 15 "https://api.github.com/repos/zhanhb/cidr-merger/git/matching-refs/tags" | jq -Sr ".[].ref" | grep "^refs/tags/v" | tail -n 1 | sed "s/refs\/tags\/v//")/cidr-merger-$(uname -o | tr 'A-Z' 'a-z')-$(uname -m) && mv ./cidr-merger* ./cidr-merger && chmod +x ./cidr-merger
+    wget https://github.com/zhanhb/cidr-merger/releases/download/v$(curl -s --connect-timeout 15 "https://api.github.com/repos/zhanhb/cidr-merger/git/matching-refs/tags" | jq -Sr ".[].ref" | grep "^refs/tags/v" | tail -n 1 | sed "s/refs\/tags\/v//")/cidr-merger-linux-amd64 && mv ./cidr-merger-linux-amd64 ./cidr-merger && chmod +x ./cidr-merger
 }
 # Analyse Data
 function AnalyseData() {
@@ -63,7 +63,7 @@ function OutputData() {
     for iana_ipv6_data_task in "${!iana_ipv6_data[@]}"; do
         echo "$(echo $(echo ${iana_ipv6_data[$iana_ipv6_data_task]} | awk -F '|' '{ print $4 }')/$(echo ${iana_ipv6_data[$iana_ipv6_data_task]} | awk -F '|' '{ print $5 }') | grep -E ${IPv6_REGEX})" >> ./cnipdb_ipv6.tmp
     done
-    cat ./cnipdb_ipv4.tmp | sort | uniq | ./cidr-merger > ../cnipdb_ipv4.txt && cat ./cnipdb_ipv6.tmp | sort | uniq | ./cidr-merger > ../cnipdb_ipv6.txt && cat ../cnipdb_ipv4.txt ../cnipdb_ipv6.txt > ../cnipdb_combine.txt
+    cat ./cnipdb_ipv4.tmp | sort | uniq | ./cidr-merger -s > ../cnipdb_ipv4.txt && cat ./cnipdb_ipv6.tmp | sort | uniq | ./cidr-merger -s > ../cnipdb_ipv6.txt && cat ../cnipdb_ipv4.txt ../cnipdb_ipv6.txt > ../cnipdb_combine.txt
     cd .. && rm -rf ./Temp
     exit 0
 }
