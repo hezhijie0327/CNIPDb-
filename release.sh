@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.2.9
+# Current Version: 1.3.0
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -67,12 +67,47 @@ function GetIPTools() {
     wget https://github.com/zhanhb/cidr-merger/releases/download/v$(curl -s --connect-timeout 15 "https://api.github.com/repos/zhanhb/cidr-merger/git/matching-refs/tags" | jq -Sr ".[].ref" | grep "^refs/tags/v" | tail -n 1 | sed "s/refs\/tags\/v//")/cidr-merger-linux-amd64 && mv ./cidr-merger-linux-amd64 ./cidr-merger && chmod +x ./cidr-merger
     composer require ip2location/ip2location-csv-converter && cp ./vendor/ip2location/ip2location-csv-converter/ip2location-csv-converter.php ./
 }
+# IPv4NUM Convert
+function IPv4NUMConvert() {
+    IPv4_ADDR=""
+    W=$(echo "obase=10;($IP_NUM / (256^3)) % 256" | bc)
+    X=$(echo "obase=10;($IP_NUM / (256^2)) % 256" | bc)
+    Y=$(echo "obase=10;($IP_NUM / (256^1)) % 256" | bc)
+    Z=$(echo "obase=10;($IP_NUM / (256^0)) % 256" | bc)
+    IPv4_ADDR="$W.$X.$Y.$Z"
+}
+# IPv6NUM Convert
+function IPv6NUMConvert() {
+    IPv6_ADDR=""
+    A=$(echo "obase=16;($IP_NUM / (65536^7)) % 65536" | bc)
+    B=$(echo "obase=16;($IP_NUM / (65536^6)) % 65536" | bc)
+    C=$(echo "obase=16;($IP_NUM / (65536^5)) % 65536" | bc)
+    D=$(echo "obase=16;($IP_NUM / (65536^4)) % 65536" | bc)
+    E=$(echo "obase=16;($IP_NUM / (65536^3)) % 65536" | bc)
+    F=$(echo "obase=16;($IP_NUM / (65536^2)) % 65536" | bc)
+    G=$(echo "obase=16;($IP_NUM / (65536^1)) % 65536" | bc)
+    H=$(echo "obase=16;($IP_NUM / (65536^0)) % 65536" | bc)
+    IPv6_ADDR="$A:$B:$C:$D:$E:$F:$G:$H"
+}
+# Decode Data
+function DecodeData() {
+    ip2location_ipv4_raw_data=($(cat ./IP2LOCATION-LITE-DB1.CSV | grep '"CN","China"' | cut -d ',' -f 1,2 | tr -d '"' | tr ',' '-' | sort | uniq | awk "{ print $2 }"))
+    ip2location_ipv6_raw_data=($(cat ./IP2LOCATION-LITE-DB1.IPV6.CSV | grep '"CN","China"' | cut -d ',' -f 1,2 | tr -d '"' | tr ',' '-' | sort | uniq | awk "{ print $2 }"))
+    for ip2location_ipv4_raw_data_task in "${!ip2location_ipv4_raw_data[@]}"; do
+        IP_NUM=$(echo "${ip2location_ipv4_raw_data[$ip2location_ipv4_raw_data_task]}" | cut -d '-' -f 1) && IPv4NUMConvert && IPv4_ADDR_START="${IPv4_ADDR}"
+        IP_NUM=$(echo "${ip2location_ipv4_raw_data[$ip2location_ipv4_raw_data_task]}" | cut -d '-' -f 2) && IPv4NUMConvert && IPv4_ADDR_END="${IPv4_ADDR}"
+        echo "${IPv4_ADDR_START}-${IPv4_ADDR_END}" >> ./cnipdb_ipv4.tmp
+    done
+    for ip2location_ipv6_raw_data_task in "${!ip2location_ipv6_raw_data[@]}"; do
+        IP_NUM=$(echo "${ip2location_ipv6_raw_data[$ip2location_ipv6_raw_data_task]}" | cut -d '-' -f 1) && IPv6NUMConvert && IPv6_ADDR_START="${IPv6_ADDR}"
+        IP_NUM=$(echo "${ip2location_ipv6_raw_data[$ip2location_ipv6_raw_data_task]}" | cut -d '-' -f 2) && IPv6NUMConvert && IPv6_ADDR_END="${IPv6_ADDR}"
+        echo "${IPv6_ADDR_START}-${IPv6_ADDR_END}" >> ./cnipdb_ipv6.tmp
+    done
+}
 # Analyse Data
 function AnalyseData() {
     iana_ipv4_data=($(cat ./iana_default.tmp ./iana_extended.tmp | grep "CN|ipv4" | sort | uniq | awk "{ print $2 }"))
     iana_ipv6_data=($(cat ./iana_default.tmp ./iana_extended.tmp | grep "CN|ipv6" | sort | uniq | awk "{ print $2 }"))
-    ip2location_ipv4_data=($(php ip2location-csv-converter.php -cidr -replace IP2LOCATION-LITE-DB1.CSV ip2location_ipv4.tmp && cat ./ip2location_ipv4.tmp | grep '"CN","China"' | cut -d ',' -f 1 | tr -d '"' | sort | uniq | awk "{ print $2 }"))
-#   ip2location_ipv6_data=($(php ip2location-csv-converter.php -cidr -replace IP2LOCATION-LITE-DB1.IPV6.CSV ip2location_ipv6.tmp && cat ./ip2location_ipv6.tmp | grep '"CN","China"' | cut -d ',' -f 1 | tr -d '"' | sort | uniq | awk "{ print $2 }"))
     plain_geoip_cn_ipv4_data=($(cat ./plain_geoip_cn.tmp | grep -v "\/0\|\:\|\#" | grep '.' | sort | uniq | awk "{ print $2 }"))
     plain_geoip_cn_ipv6_data=($(cat ./plain_geoip_cn.tmp | grep -v "\/0\|\.\|\#" | grep ':' | sort | uniq | awk "{ print $2 }"))
     sapics_ip_location_db_ipv4_data=($(cat ./sapics_ip_location_db.tmp | grep 'CN' | grep '.' | cut -d ',' -f 1,2 | tr ',' '-' | sort | uniq | awk "{ print $2 }"))
@@ -86,12 +121,6 @@ function OutputData() {
     for iana_ipv6_data_task in "${!iana_ipv6_data[@]}"; do
         echo "$(echo $(echo ${iana_ipv6_data[$iana_ipv6_data_task]} | awk -F '|' '{ print $4 }')/$(echo ${iana_ipv6_data[$iana_ipv6_data_task]} | awk -F '|' '{ print $5 }'))" >> ./cnipdb_ipv6.tmp
     done
-    for ip2location_ipv4_data_task in "${!ip2location_ipv4_data[@]}"; do
-        echo "${ip2location_ipv4_data[$ip2location_ipv4_data_task]}" >> ./cnipdb_ipv4.tmp
-    done
-    for ip2location_ipv6_data_task in "${!ip2location_ipv6_data[@]}"; do
-        echo "${ip2location_ipv6_data[$ip2location_ipv6_data_task]}" >> ./cnipdb_ipv6.tmp
-    done
     for plain_geoip_cn_ipv4_data_task in "${!plain_geoip_cn_ipv4_data[@]}"; do
         echo "${plain_geoip_cn_ipv4_data[$plain_geoip_cn_ipv4_data_task]}" >> ./cnipdb_ipv4.tmp
     done
@@ -104,7 +133,7 @@ function OutputData() {
     for sapics_ip_location_db_ipv6_data_task in "${!sapics_ip_location_db_ipv6_data[@]}"; do
         echo "${sapics_ip_location_db_ipv6_data[$sapics_ip_location_db_ipv6_data_task]}" >> ./cnipdb_ipv6.tmp
     done
-    cat ./cnipdb_ipv4.tmp | sort | uniq | ./cidr-merger -s > ../cnipdb_ipv4.txt && cat ./cnipdb_ipv6.tmp | sort | uniq | ./cidr-merger -s > ../cnipdb_ipv6.txt && cat ../cnipdb_ipv4.txt ../cnipdb_ipv6.txt > ../cnipdb_combine.txt
+    cat ./cnipdb_ipv4.tmp | grep '.' | sort | uniq | ./cidr-merger -s > ../cnipdb_ipv4.txt && cat ./cnipdb_ipv6.tmp | grep ':' | sort | uniq | ./cidr-merger -s > ../cnipdb_ipv6.txt && cat ../cnipdb_ipv4.txt ../cnipdb_ipv6.txt > ../cnipdb_combine.txt
     cd .. && rm -rf ./Temp
     exit 0
 }
@@ -114,6 +143,8 @@ function OutputData() {
 GetData
 # Call GetIPTools
 GetIPTools
+# Call DecodeData
+DecodeData
 # Call AnalyseData
 AnalyseData
 # Call OutputData
