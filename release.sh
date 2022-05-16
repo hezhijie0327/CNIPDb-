@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.3.2
+# Current Version: 1.3.3
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -13,8 +13,8 @@ function GetData() {
         "https://raw.githubusercontent.com/gaoyifan/china-operator-ip/ip-lists/china6.txt"
         "https://raw.githubusercontent.com/gaoyifan/china-operator-ip/ip-lists/china.txt"
         "https://raw.githubusercontent.com/misakaio/chnroutes2/master/chnroutes.txt"
-        "http://www.ipdeny.com/ipblocks/data/countries/cn.zone"
-        "http://www.ipdeny.com/ipv6/ipaddresses/blocks/cn.zone"
+        "http://www.ipdeny.com/ipblocks/data/aggregated/cn-aggregated.zone"
+        "http://www.ipdeny.com/ipv6/ipaddresses/aggregated/cn-aggregated.zone"
     )
     sapics_ip_location_db=(
         "https://raw.githubusercontent.com/sapics/ip-location-db/master/dbip-country/dbip-country-ipv4.csv"
