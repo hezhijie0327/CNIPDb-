@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.1.7
+# Current Version: 1.1.8
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -14,7 +14,7 @@ function GetData() {
         "https://raw.githubusercontent.com/firehol/blocklist-ipsets/master/ip2location_country/ip2location_country_cn.netset"
         "https://raw.githubusercontent.com/firehol/blocklist-ipsets/master/ipdeny_country/id_country_cn.netset"
         "https://raw.githubusercontent.com/firehol/blocklist-ipsets/master/ipip_country/ipip_country_cn.netset"
-#       "https://raw.githubusercontent.com/gaoyifan/china-operator-ip/ip-lists/china6.txt"
+        "https://raw.githubusercontent.com/gaoyifan/china-operator-ip/ip-lists/china6.txt"
         "https://raw.githubusercontent.com/gaoyifan/china-operator-ip/ip-lists/china.txt"
         "https://raw.githubusercontent.com/misakaio/chnroutes2/master/chnroutes.txt"
         "https://raw.githubusercontent.com/v2fly/geoip/release/text/cn.txt"
@@ -48,8 +48,8 @@ function GetData() {
 }
 # Analyse Data
 function AnalyseData() {
-    geoip_cn_ipv4_data=($(cat ./geoip_cn.tmp | grep -v "\:\|\#" | grep '.' | sort | uniq | awk "{ print $2 }"))
-    geoip_cn_ipv6_data=($(cat ./geoip_cn.tmp | grep -v "\.\|\#" | grep ':' | sort | uniq | awk "{ print $2 }"))
+    geoip_cn_ipv4_data=($(cat ./geoip_cn.tmp | grep -v "\/0\|\:\|\#" | grep '.' | sort | uniq | awk "{ print $2 }"))
+    geoip_cn_ipv6_data=($(cat ./geoip_cn.tmp | grep -v "\/0\|\.\|\#" | grep ':' | sort | uniq | awk "{ print $2 }"))
     iana_ipv4_data=($(cat ./iana_default.tmp ./iana_extended.tmp | grep "CN|ipv4" | sort | uniq | awk "{ print $2 }"))
     iana_ipv6_data=($(cat ./iana_default.tmp ./iana_extended.tmp | grep "CN|ipv6" | sort | uniq | awk "{ print $2 }"))
 }
