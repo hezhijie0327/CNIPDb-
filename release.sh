@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.2.8
+# Current Version: 1.2.9
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -28,7 +28,6 @@ function GetData() {
     )
     plain_geoip_cn=(
         "https://raw.githubusercontent.com/17mon/china_ip_list/master/china_ip_list.txt"
-        "https://raw.githubusercontent.com/firehol/blocklist-ipsets/master/ip2location_country/ip2location_country_cn.netset"
         "https://raw.githubusercontent.com/gaoyifan/china-operator-ip/ip-lists/china6.txt"
         "https://raw.githubusercontent.com/gaoyifan/china-operator-ip/ip-lists/china.txt"
         "https://raw.githubusercontent.com/misakaio/chnroutes2/master/chnroutes.txt"
@@ -73,7 +72,7 @@ function AnalyseData() {
     iana_ipv4_data=($(cat ./iana_default.tmp ./iana_extended.tmp | grep "CN|ipv4" | sort | uniq | awk "{ print $2 }"))
     iana_ipv6_data=($(cat ./iana_default.tmp ./iana_extended.tmp | grep "CN|ipv6" | sort | uniq | awk "{ print $2 }"))
     ip2location_ipv4_data=($(php ip2location-csv-converter.php -cidr -replace IP2LOCATION-LITE-DB1.CSV ip2location_ipv4.tmp && cat ./ip2location_ipv4.tmp | grep '"CN","China"' | cut -d ',' -f 1 | tr -d '"' | sort | uniq | awk "{ print $2 }"))
-    ip2location_ipv6_data=($(php ip2location-csv-converter.php -cidr -replace IP2LOCATION-LITE-DB1.IPV6.CSV ip2location_ipv6.tmp && cat ./ip2location_ipv6.tmp | grep '"CN","China"' | cut -d ',' -f 1 | tr -d '"' | sort | uniq | awk "{ print $2 }"))
+#   ip2location_ipv6_data=($(php ip2location-csv-converter.php -cidr -replace IP2LOCATION-LITE-DB1.IPV6.CSV ip2location_ipv6.tmp && cat ./ip2location_ipv6.tmp | grep '"CN","China"' | cut -d ',' -f 1 | tr -d '"' | sort | uniq | awk "{ print $2 }"))
     plain_geoip_cn_ipv4_data=($(cat ./plain_geoip_cn.tmp | grep -v "\/0\|\:\|\#" | grep '.' | sort | uniq | awk "{ print $2 }"))
     plain_geoip_cn_ipv6_data=($(cat ./plain_geoip_cn.tmp | grep -v "\/0\|\.\|\#" | grep ':' | sort | uniq | awk "{ print $2 }"))
     sapics_ip_location_db_ipv4_data=($(cat ./sapics_ip_location_db.tmp | grep 'CN' | grep '.' | cut -d ',' -f 1,2 | tr ',' '-' | sort | uniq | awk "{ print $2 }"))
