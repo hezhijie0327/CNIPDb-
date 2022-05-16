@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.1.4
+# Current Version: 1.1.5
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -10,14 +10,12 @@
 function GetData() {
     geoip_cn=(
         "https://raw.githubusercontent.com/Loyalsoldier/geoip/release/text/cn.txt"
-        "https://raw.githubusercontent.com/firehol/blocklist-ipsets/master/geolite2_country/country_cn.netset"
-        "https://raw.githubusercontent.com/firehol/blocklist-ipsets/master/ip2location_country/ip2location_country_cn.netset"
-        "https://raw.githubusercontent.com/firehol/blocklist-ipsets/master/ipdeny_country/id_country_cn.netset"
-        "https://raw.githubusercontent.com/firehol/blocklist-ipsets/master/ipip_country/ipip_country_cn.netset"
         "https://raw.githubusercontent.com/gaoyifan/china-operator-ip/ip-lists/china6.txt"
         "https://raw.githubusercontent.com/gaoyifan/china-operator-ip/ip-lists/china.txt"
         "https://raw.githubusercontent.com/misakaio/chnroutes2/master/chnroutes.txt"
         "https://raw.githubusercontent.com/v2fly/geoip/release/text/cn.txt"
+        "http://www.ipdeny.com/ipblocks/data/countries/cn.zone"
+        "http://www.ipdeny.com/ipv6/ipaddresses/blocks/cn.zone"
     )
     iana_default=(
         "https://ftp.afrinic.net/pub/stats/afrinic/delegated-afrinic-latest"
