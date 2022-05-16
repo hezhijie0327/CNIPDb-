@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.3.3
+# Current Version: 1.3.4
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -141,7 +141,7 @@ GetData
 # Call GetIPTools
 GetIPTools
 # Call DecodeData
-DecodeData
+#DecodeData
 # Call AnalyseData
 AnalyseData
 # Call OutputData
