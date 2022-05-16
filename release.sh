@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.2.7
+# Current Version: 1.2.8
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -22,6 +22,10 @@ function GetData() {
         "https://ftp.lacnic.net/pub/stats/lacnic/delegated-lacnic-extended-latest"
         "https://ftp.ripe.net/ripe/stats/delegated-ripencc-extended-latest"
     )
+    ip2location=(
+        "https://www.ip2location.com/download/?token={IP2LOCATION_TOKEN}&file=DB1LITECSVIPV6"
+        "https://www.ip2location.com/download/?token={IP2LOCATION_TOKEN}&file=DB1LITECSV"
+    )
     plain_geoip_cn=(
         "https://raw.githubusercontent.com/17mon/china_ip_list/master/china_ip_list.txt"
         "https://raw.githubusercontent.com/firehol/blocklist-ipsets/master/ip2location_country/ip2location_country_cn.netset"
@@ -41,12 +45,16 @@ function GetData() {
         "https://raw.githubusercontent.com/sapics/ip-location-db/master/iptoasn-country/iptoasn-country-ipv4.csv"
         "https://raw.githubusercontent.com/sapics/ip-location-db/master/iptoasn-country/iptoasn-country-ipv6.csv"
     )
-    rm -rf ./cnipdb_* ./Temp && mkdir ./Temp && cd ./Temp && wget https://github.com/zhanhb/cidr-merger/releases/download/v$(curl -s --connect-timeout 15 "https://api.github.com/repos/zhanhb/cidr-merger/git/matching-refs/tags" | jq -Sr ".[].ref" | grep "^refs/tags/v" | tail -n 1 | sed "s/refs\/tags\/v//")/cidr-merger-linux-amd64 && mv ./cidr-merger-linux-amd64 ./cidr-merger && chmod +x ./cidr-merger
+    rm -rf ./cnipdb_* ./Temp && mkdir ./Temp && cd ./Temp
     for iana_default_task in "${!iana_default[@]}"; do
         curl -s --connect-timeout 15 "${iana_default[$iana_default_task]}" >> ./iana_default.tmp
     done
     for iana_extended_task in "${!iana_extended[@]}"; do
         curl -s --connect-timeout 15 "${iana_extended[$iana_extended_task]}" >> ./iana_extended.tmp
+    done
+    for ip2location_task in "${!ip2location[@]}"; do
+        curl -s --connect-timeout 15 "${ip2location[$ip2location_task]}" >> ./ip2location_${ip2location_task}.zip
+        unzip -o -d . ./ip2location_${ip2location_task}.zip && rm -rf ./ip2location_${ip2location_task}.zip
     done
     for plain_geoip_cn_task in "${!plain_geoip_cn[@]}"; do
         curl -s --connect-timeout 15 "${plain_geoip_cn[$plain_geoip_cn_task]}" >> ./plain_geoip_cn.tmp
@@ -55,10 +63,17 @@ function GetData() {
         curl -s --connect-timeout 15 "${sapics_ip_location_db[$sapics_ip_location_db_task]}" >> ./sapics_ip_location_db.tmp
     done
 }
+# Get IP Tools
+function GetIPTools() {
+    wget https://github.com/zhanhb/cidr-merger/releases/download/v$(curl -s --connect-timeout 15 "https://api.github.com/repos/zhanhb/cidr-merger/git/matching-refs/tags" | jq -Sr ".[].ref" | grep "^refs/tags/v" | tail -n 1 | sed "s/refs\/tags\/v//")/cidr-merger-linux-amd64 && mv ./cidr-merger-linux-amd64 ./cidr-merger && chmod +x ./cidr-merger
+    composer require ip2location/ip2location-csv-converter && cp ./vendor/ip2location/ip2location-csv-converter/ip2location-csv-converter.php ./
+}
 # Analyse Data
 function AnalyseData() {
     iana_ipv4_data=($(cat ./iana_default.tmp ./iana_extended.tmp | grep "CN|ipv4" | sort | uniq | awk "{ print $2 }"))
     iana_ipv6_data=($(cat ./iana_default.tmp ./iana_extended.tmp | grep "CN|ipv6" | sort | uniq | awk "{ print $2 }"))
+    ip2location_ipv4_data=($(php ip2location-csv-converter.php -cidr -replace IP2LOCATION-LITE-DB1.CSV ip2location_ipv4.tmp && cat ./ip2location_ipv4.tmp | grep '"CN","China"' | cut -d ',' -f 1 | tr -d '"' | sort | uniq | awk "{ print $2 }"))
+    ip2location_ipv6_data=($(php ip2location-csv-converter.php -cidr -replace IP2LOCATION-LITE-DB1.IPV6.CSV ip2location_ipv6.tmp && cat ./ip2location_ipv6.tmp | grep '"CN","China"' | cut -d ',' -f 1 | tr -d '"' | sort | uniq | awk "{ print $2 }"))
     plain_geoip_cn_ipv4_data=($(cat ./plain_geoip_cn.tmp | grep -v "\/0\|\:\|\#" | grep '.' | sort | uniq | awk "{ print $2 }"))
     plain_geoip_cn_ipv6_data=($(cat ./plain_geoip_cn.tmp | grep -v "\/0\|\.\|\#" | grep ':' | sort | uniq | awk "{ print $2 }"))
     sapics_ip_location_db_ipv4_data=($(cat ./sapics_ip_location_db.tmp | grep 'CN' | grep '.' | cut -d ',' -f 1,2 | tr ',' '-' | sort | uniq | awk "{ print $2 }"))
@@ -71,6 +86,12 @@ function OutputData() {
     done
     for iana_ipv6_data_task in "${!iana_ipv6_data[@]}"; do
         echo "$(echo $(echo ${iana_ipv6_data[$iana_ipv6_data_task]} | awk -F '|' '{ print $4 }')/$(echo ${iana_ipv6_data[$iana_ipv6_data_task]} | awk -F '|' '{ print $5 }'))" >> ./cnipdb_ipv6.tmp
+    done
+    for ip2location_ipv4_data_task in "${!ip2location_ipv4_data[@]}"; do
+        echo "${ip2location_ipv4_data[$ip2location_ipv4_data_task]}" >> ./cnipdb_ipv4.tmp
+    done
+    for ip2location_ipv6_data_task in "${!ip2location_ipv6_data[@]}"; do
+        echo "${ip2location_ipv6_data[$ip2location_ipv6_data_task]}" >> ./cnipdb_ipv6.tmp
     done
     for plain_geoip_cn_ipv4_data_task in "${!plain_geoip_cn_ipv4_data[@]}"; do
         echo "${plain_geoip_cn_ipv4_data[$plain_geoip_cn_ipv4_data_task]}" >> ./cnipdb_ipv4.tmp
@@ -92,6 +113,8 @@ function OutputData() {
 ## Process
 # Call GetData
 GetData
+# Call GetIPTools
+GetIPTools
 # Call AnalyseData
 AnalyseData
 # Call OutputData
