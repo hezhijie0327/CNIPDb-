@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.2.0
+# Current Version: 1.2.1
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -10,11 +10,6 @@
 function GetData() {
     geoip_cn=(
         "https://raw.githubusercontent.com/17mon/china_ip_list/master/china_ip_list.txt"
-        "https://raw.githubusercontent.com/Loyalsoldier/geoip/release/text/cn.txt"
-        "https://raw.githubusercontent.com/firehol/blocklist-ipsets/master/geolite2_country/country_cn.netset"
-        "https://raw.githubusercontent.com/firehol/blocklist-ipsets/master/ip2location_country/ip2location_country_cn.netset"
-        "https://raw.githubusercontent.com/firehol/blocklist-ipsets/master/ipdeny_country/id_country_cn.netset"
-        "https://raw.githubusercontent.com/firehol/blocklist-ipsets/master/ipip_country/ipip_country_cn.netset"
         "https://raw.githubusercontent.com/gaoyifan/china-operator-ip/ip-lists/china6.txt"
         "https://raw.githubusercontent.com/gaoyifan/china-operator-ip/ip-lists/china.txt"
         "https://raw.githubusercontent.com/misakaio/chnroutes2/master/chnroutes.txt"
