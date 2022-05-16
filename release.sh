@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.2.3
+# Current Version: 1.2.4
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -32,20 +32,14 @@ function GetData() {
         "https://ftp.ripe.net/ripe/stats/delegated-ripencc-extended-latest"
     )
     sapics_ip_location_db=(
-        "https://raw.githubusercontent.com/sapics/ip-location-db/master/asn-country/asn-country-ipv4.csv"
-        "https://raw.githubusercontent.com/sapics/ip-location-db/master/asn-country/asn-country-ipv6.csv"
         "https://raw.githubusercontent.com/sapics/ip-location-db/master/dbip-country/dbip-country-ipv4.csv"
         "https://raw.githubusercontent.com/sapics/ip-location-db/master/dbip-country/dbip-country-ipv6.csv"
-        "https://raw.githubusercontent.com/sapics/ip-location-db/master/geo-asn-country/geo-asn-country-ipv4.csv"
-        "https://raw.githubusercontent.com/sapics/ip-location-db/master/geo-asn-country/geo-asn-country-ipv6.csv"
         "https://raw.githubusercontent.com/sapics/ip-location-db/master/geo-whois-asn-country/geo-whois-asn-country-ipv4.csv"
         "https://raw.githubusercontent.com/sapics/ip-location-db/master/geo-whois-asn-country/geo-whois-asn-country-ipv6.csv"
         "https://raw.githubusercontent.com/sapics/ip-location-db/master/geolite2-country/geolite2-country-ipv4.csv"
         "https://raw.githubusercontent.com/sapics/ip-location-db/master/geolite2-country/geolite2-country-ipv6.csv"
         "https://raw.githubusercontent.com/sapics/ip-location-db/master/iptoasn-country/iptoasn-country-ipv4.csv"
         "https://raw.githubusercontent.com/sapics/ip-location-db/master/iptoasn-country/iptoasn-country-ipv4.csv"
-        "https://raw.githubusercontent.com/sapics/ip-location-db/master/webnet77-country/webnet77-country-ipv4.csv"
-        "https://raw.githubusercontent.com/sapics/ip-location-db/master/webnet77-country/webnet77-country-ipv6.csv"
     )
     rm -rf ./cnipdb_* ./Temp && mkdir ./Temp && cd ./Temp && wget https://github.com/zhanhb/cidr-merger/releases/download/v$(curl -s --connect-timeout 15 "https://api.github.com/repos/zhanhb/cidr-merger/git/matching-refs/tags" | jq -Sr ".[].ref" | grep "^refs/tags/v" | tail -n 1 | sed "s/refs\/tags\/v//")/cidr-merger-linux-amd64 && mv ./cidr-merger-linux-amd64 ./cidr-merger && chmod +x ./cidr-merger
     for geoip_cn_task in "${!geoip_cn[@]}"; do
