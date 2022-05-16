@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.2.5
+# Current Version: 1.2.6
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -38,7 +38,7 @@ function GetData() {
         "https://raw.githubusercontent.com/sapics/ip-location-db/master/geolite2-country/geolite2-country-ipv4.csv"
         "https://raw.githubusercontent.com/sapics/ip-location-db/master/geolite2-country/geolite2-country-ipv6.csv"
         "https://raw.githubusercontent.com/sapics/ip-location-db/master/iptoasn-country/iptoasn-country-ipv4.csv"
-        "https://raw.githubusercontent.com/sapics/ip-location-db/master/iptoasn-country/iptoasn-country-ipv4.csv"
+        "https://raw.githubusercontent.com/sapics/ip-location-db/master/iptoasn-country/iptoasn-country-ipv6.csv"
     )
     rm -rf ./cnipdb_* ./Temp && mkdir ./Temp && cd ./Temp && wget https://github.com/zhanhb/cidr-merger/releases/download/v$(curl -s --connect-timeout 15 "https://api.github.com/repos/zhanhb/cidr-merger/git/matching-refs/tags" | jq -Sr ".[].ref" | grep "^refs/tags/v" | tail -n 1 | sed "s/refs\/tags\/v//")/cidr-merger-linux-amd64 && mv ./cidr-merger-linux-amd64 ./cidr-merger && chmod +x ./cidr-merger
     for iana_default_task in "${!iana_default[@]}"; do
