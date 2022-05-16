@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.2.2
+# Current Version: 1.2.3
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -67,8 +67,8 @@ function AnalyseData() {
     geoip_cn_ipv6_data=($(cat ./geoip_cn.tmp | grep -v "\/0\|\.\|\#" | grep ':' | sort | uniq | awk "{ print $2 }"))
     iana_ipv4_data=($(cat ./iana_default.tmp ./iana_extended.tmp | grep "CN|ipv4" | sort | uniq | awk "{ print $2 }"))
     iana_ipv6_data=($(cat ./iana_default.tmp ./iana_extended.tmp | grep "CN|ipv6" | sort | uniq | awk "{ print $2 }"))
-    sapics_ip_location_db_ipv4_data=($(cat ./sapics_ip_location_db.tmp | grep -v ':'| grep 'CN' | cut -d ',' -f 1,2 | tr ',' '-' | sort | uniq | awk "{ print $2 }"))
-    sapics_ip_location_db_ipv6_data=($(cat ./sapics_ip_location_db.tmp | grep -v '.'| grep 'CN' | cut -d ',' -f 1,2 | tr ',' '-' | sort | uniq | awk "{ print $2 }"))
+    sapics_ip_location_db_ipv4_data=($(cat ./sapics_ip_location_db.tmp | grep 'CN' | grep '.' | cut -d ',' -f 1,2 | tr ',' '-' | sort | uniq | awk "{ print $2 }"))
+    sapics_ip_location_db_ipv6_data=($(cat ./sapics_ip_location_db.tmp | grep 'CN' | grep ':' | cut -d ',' -f 1,2 | tr ',' '-' | sort | uniq | awk "{ print $2 }"))
 }
 # Output Data
 function OutputData() {
