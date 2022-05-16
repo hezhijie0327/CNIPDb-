@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.3.4
+# Current Version: 1.3.5
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -19,12 +19,12 @@ function GetData() {
     sapics_ip_location_db=(
         "https://raw.githubusercontent.com/sapics/ip-location-db/master/dbip-country/dbip-country-ipv4.csv"
         "https://raw.githubusercontent.com/sapics/ip-location-db/master/dbip-country/dbip-country-ipv6.csv"
-#        "https://raw.githubusercontent.com/sapics/ip-location-db/master/geo-whois-asn-country/geo-whois-asn-country-ipv4.csv"
-#        "https://raw.githubusercontent.com/sapics/ip-location-db/master/geo-whois-asn-country/geo-whois-asn-country-ipv6.csv"
+        "https://raw.githubusercontent.com/sapics/ip-location-db/master/geo-whois-asn-country/geo-whois-asn-country-ipv4.csv"
+        "https://raw.githubusercontent.com/sapics/ip-location-db/master/geo-whois-asn-country/geo-whois-asn-country-ipv6.csv"
         "https://raw.githubusercontent.com/sapics/ip-location-db/master/geolite2-country/geolite2-country-ipv4.csv"
         "https://raw.githubusercontent.com/sapics/ip-location-db/master/geolite2-country/geolite2-country-ipv6.csv"
-#        "https://raw.githubusercontent.com/sapics/ip-location-db/master/iptoasn-country/iptoasn-country-ipv4.csv"
-#        "https://raw.githubusercontent.com/sapics/ip-location-db/master/iptoasn-country/iptoasn-country-ipv6.csv"
+        "https://raw.githubusercontent.com/sapics/ip-location-db/master/iptoasn-country/iptoasn-country-ipv4.csv"
+        "https://raw.githubusercontent.com/sapics/ip-location-db/master/iptoasn-country/iptoasn-country-ipv6.csv"
     )
     rm -rf ./cnipdb_* ./Temp && mkdir ./Temp && cd ./Temp
     for plain_geoip_cn_task in "${!plain_geoip_cn[@]}"; do
@@ -141,7 +141,7 @@ GetData
 # Call GetIPTools
 GetIPTools
 # Call DecodeData
-#DecodeData
+DecodeData
 # Call AnalyseData
 AnalyseData
 # Call OutputData
