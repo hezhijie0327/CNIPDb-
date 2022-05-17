@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.4.3
+# Current Version: 1.4.4
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -8,11 +8,17 @@
 ## Function
 # Environment Preparation
 function EnvironmentPreparation() {
-    rm -rf ./cnipdb_* ./Temp && mkdir ./Temp && cd ./Temp
+    rm -rf ./Temp ./cnipdb ./cnipdb_* && mkdir ./Temp ./cnipdb && cd ./Temp
     wget https://github.com/zhanhb/cidr-merger/releases/download/v$(curl -s --connect-timeout 15 "https://api.github.com/repos/zhanhb/cidr-merger/git/matching-refs/tags" | jq -Sr ".[].ref" | grep "^refs/tags/v" | tail -n 1 | sed "s/refs\/tags\/v//")/cidr-merger-linux-amd64 && mv ./cidr-merger-linux-amd64 ./cidr-merger && chmod +x ./cidr-merger
 }
 # Environment Cleanup
 function EnvironmentCleanup() {
+    cat ../cnipdb_*/asn_ipv4.txt | sort | uniq | ./cidr-merger -s > ../cnipdb/asn_ipv4.txt
+    cat ../cnipdb_*/asn_ipv6.txt | sort | uniq | ./cidr-merger -s > ../cnipdb/asn_ipv4.txt
+    cat ../cnipdb/asn_ipv4.txt ../cnipdb/cnipdb_asn_ipv6.txt > ../cnipdb/asn_ipv4_6.txt
+    cat ../cnipdb_*/country_ipv4.txt | sort | uniq | ./cidr-merger -s > ../cnipdb/country_ipv4.txt
+    cat ../cnipdb_*/country_ipv6.txt | sort | uniq | ./cidr-merger -s > ../cnipdb/country_ipv6.txt
+    cat ../cnipdb/country_ipv4.txt ../cnipdb/country_ipv6.txt > ../cnipdb/country_ipv4_6.txt
     cd .. && rm -rf ./Temp
 }
 # Get Data from BGP
