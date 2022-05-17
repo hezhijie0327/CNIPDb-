@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.4.4
+# Current Version: 1.4.5
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -14,8 +14,8 @@ function EnvironmentPreparation() {
 # Environment Cleanup
 function EnvironmentCleanup() {
     cat ../cnipdb_*/asn_ipv4.txt | sort | uniq | ./cidr-merger -s > ../cnipdb/asn_ipv4.txt
-    cat ../cnipdb_*/asn_ipv6.txt | sort | uniq | ./cidr-merger -s > ../cnipdb/asn_ipv4.txt
-    cat ../cnipdb/asn_ipv4.txt ../cnipdb/cnipdb_asn_ipv6.txt > ../cnipdb/asn_ipv4_6.txt
+    cat ../cnipdb_*/asn_ipv6.txt | sort | uniq | ./cidr-merger -s > ../cnipdb/asn_ipv6.txt
+    cat ../cnipdb/asn_ipv4.txt ../cnipdb/asn_ipv6.txt > ../cnipdb/asn_ipv4_6.txt
     cat ../cnipdb_*/country_ipv4.txt | sort | uniq | ./cidr-merger -s > ../cnipdb/country_ipv4.txt
     cat ../cnipdb_*/country_ipv6.txt | sort | uniq | ./cidr-merger -s > ../cnipdb/country_ipv6.txt
     cat ../cnipdb/country_ipv4.txt ../cnipdb/country_ipv6.txt > ../cnipdb/country_ipv4_6.txt
@@ -199,7 +199,7 @@ function GetDataFromIP2Location() {
     cat ./ip2location_asn_ipv6.tmp | sort | uniq | ./cidr-merger -s > ../cnipdb_ip2location/asn_ipv6.txt
     cat ./ip2location_asn_ipv4.tmp ./ip2location_asn_ipv6.tmp > ../cnipdb_ip2location/asn_ipv4_6.txt
     cat ./ip2location_country_ipv4.tmp | sort | uniq | ./cidr-merger -s > ../cnipdb_ip2location/country_ipv4.txt
-    cat ./ip2location_country_ipv6.tmp | sort | uniq | ./cidr-merger -s > ../cnipdb_ip2location/country_ipv6.txt
+    cat ./ip2location_country_ipv6.tmp | sort | uniq | ./cidr-merger -s | grep -v '^::ffff:' > ../cnipdb_ip2location/country_ipv6.txt
     cat ./ip2location_country_ipv4.tmp ./ip2location_country_ipv6.tmp > ../cnipdb_ip2location/country_ipv4_6.txt
 }
 # Get Data from IPdeny
