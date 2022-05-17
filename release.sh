@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.4.5
+# Current Version: 1.4.6
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -42,7 +42,7 @@ function GetDataFromBGP() {
     mkdir ../cnipdb_bgp
     cat ./bgp_country_ipv4.tmp | sort | uniq | ./cidr-merger -s > ../cnipdb_bgp/country_ipv4.txt
     cat ./bgp_country_ipv6.tmp | sort | uniq | ./cidr-merger -s > ../cnipdb_bgp/country_ipv6.txt
-    cat ./bgp_country_ipv4.tmp ./bgp_country_ipv6.tmp > ../cnipdb_bgp/country_ipv4_6.txt
+    cat ../cnipdb_bgp/country_ipv4.txt ../cnipdb_bgp/country_ipv6.txt > ../cnipdb_bgp/country_ipv4_6.txt
 }
 # Get Data from DBIP
 function GetDataFromDBIP() {
@@ -73,10 +73,10 @@ function GetDataFromDBIP() {
     mkdir ../cnipdb_dbip
     cat ./dbip_asn_ipv4.tmp | sort | uniq | ./cidr-merger -s > ../cnipdb_dbip/asn_ipv4.txt
     cat ./dbip_asn_ipv6.tmp | sort | uniq | ./cidr-merger -s > ../cnipdb_dbip/asn_ipv6.txt
-    cat ./dbip_asn_ipv4.tmp ./dbip_asn_ipv6.tmp > ../cnipdb_dbip/asn_ipv4_6.txt
+    cat ../cnipdb_dbip/asn_ipv4.txt ../cnipdb_dbip/asn_ipv6.txt > ../cnipdb_dbip/asn_ipv4_6.txt
     cat ./dbip_country_ipv4.tmp | sort | uniq | ./cidr-merger -s > ../cnipdb_dbip/country_ipv4.txt
     cat ./dbip_country_ipv6.tmp | sort | uniq | ./cidr-merger -s > ../cnipdb_dbip/country_ipv6.txt
-    cat ./dbip_country_ipv4.tmp ./dbip_country_ipv6.tmp > ../cnipdb_dbip/country_ipv4_6.txt
+    cat ../cnipdb_dbip/country_ipv4.txt ../cnipdb_dbip/country_ipv6.txt > ../cnipdb_dbip/country_ipv4_6.txt
 }
 # Get Data from GeoLite2
 function GetDataFromGeoLite2() {
@@ -107,10 +107,10 @@ function GetDataFromGeoLite2() {
     mkdir ../cnipdb_geolite2
     cat ./geolite2_asn_ipv4.tmp | sort | uniq | ./cidr-merger -s > ../cnipdb_geolite2/asn_ipv4.txt
     cat ./geolite2_asn_ipv6.tmp | sort | uniq | ./cidr-merger -s > ../cnipdb_geolite2/asn_ipv6.txt
-    cat ./geolite2_asn_ipv4.tmp ./geolite2_asn_ipv6.tmp > ../cnipdb_geolite2/asn_ipv4_6.txt
+    cat ../cnipdb_geolite2/asn_ipv4.txt ../cnipdb_geolite2/asn_ipv6.txt > ../cnipdb_geolite2/asn_ipv4_6.txt
     cat ./geolite2_country_ipv4.tmp | sort | uniq | ./cidr-merger -s > ../cnipdb_geolite2/country_ipv4.txt
     cat ./geolite2_country_ipv6.tmp | sort | uniq | ./cidr-merger -s > ../cnipdb_geolite2/country_ipv6.txt
-    cat ./geolite2_country_ipv4.tmp ./geolite2_country_ipv6.tmp > ../cnipdb_geolite2/country_ipv4_6.txt
+    cat ../cnipdb_geolite2/country_ipv4.txt ../cnipdb_geolite2/country_ipv6.txt > ../cnipdb_geolite2/country_ipv4_6.txt
 }
 # Get Data from IANA
 function GetDataFromIANA() {
@@ -140,7 +140,7 @@ function GetDataFromIANA() {
     mkdir ../cnipdb_iana
     cat ./iana_asn_ipv4.tmp | sort | uniq | ./cidr-merger -s > ../cnipdb_iana/asn_ipv4.txt
     cat ./iana_asn_ipv6.tmp | sort | uniq | ./cidr-merger -s > ../cnipdb_iana/asn_ipv6.txt
-    cat ./iana_asn_ipv4.tmp ./iana_asn_ipv6.tmp > ../cnipdb_iana/asn_ipv4_6.txt
+    cat ../cnipdb_iana/asn_ipv4.txt ../cnipdb_iana/asn_ipv6.txt > ../cnipdb_iana/asn_ipv4_6.txt
 }
 # Get Data from IP2Location
 function GetDataFromIP2Location() {
@@ -197,10 +197,10 @@ function GetDataFromIP2Location() {
     mkdir ../cnipdb_ip2location
     cat ./ip2location_asn_ipv4.tmp | sort | uniq | ./cidr-merger -s > ../cnipdb_ip2location/asn_ipv4.txt
     cat ./ip2location_asn_ipv6.tmp | sort | uniq | ./cidr-merger -s > ../cnipdb_ip2location/asn_ipv6.txt
-    cat ./ip2location_asn_ipv4.tmp ./ip2location_asn_ipv6.tmp > ../cnipdb_ip2location/asn_ipv4_6.txt
+    cat ../cnipdb_ip2location/asn_ipv4.txt ../cnipdb_ip2location/asn_ipv6.txt > ../cnipdb_ip2location/asn_ipv4_6.txt
     cat ./ip2location_country_ipv4.tmp | sort | uniq | ./cidr-merger -s > ../cnipdb_ip2location/country_ipv4.txt
     cat ./ip2location_country_ipv6.tmp | sort | uniq | ./cidr-merger -s | grep -v '^::ffff:' > ../cnipdb_ip2location/country_ipv6.txt
-    cat ./ip2location_country_ipv4.tmp ./ip2location_country_ipv6.tmp > ../cnipdb_ip2location/country_ipv4_6.txt
+    cat ../cnipdb_ip2location/country_ipv4.txt ../cnipdb_ip2location/country_ipv6.txt > ../cnipdb_ip2location/country_ipv4_6.txt
 }
 # Get Data from IPdeny
 function GetDataFromIPdeny() {
@@ -222,7 +222,7 @@ function GetDataFromIPdeny() {
     mkdir ../cnipdb_ipdeny
     cat ./ipdeny_country_ipv4.tmp | sort | uniq | ./cidr-merger -s > ../cnipdb_ipdeny/country_ipv4.txt
     cat ./ipdeny_country_ipv6.tmp | sort | uniq | ./cidr-merger -s > ../cnipdb_ipdeny/country_ipv6.txt
-    cat ./ipdeny_country_ipv4.tmp ./ipdeny_country_ipv6.tmp > ../cnipdb_ipdeny/country_ipv4_6.txt
+    cat ../cnipdb_ipdeny/country_ipv4.txt ../cnipdb_ipdeny/country_ipv6.txt > ../cnipdb_ipdeny/country_ipv4_6.txt
 }
 # Get Data from IPIPdotNET
 function GetDataFromIPIPdotNET() {
@@ -271,10 +271,10 @@ function GetDataFromIPtoASN() {
     mkdir ../cnipdb_iptoasn
     cat ./iptoasn_asn_ipv4.tmp | sort | uniq | ./cidr-merger -s > ../cnipdb_iptoasn/asn_ipv4.txt
     cat ./iptoasn_asn_ipv6.tmp | sort | uniq | ./cidr-merger -s > ../cnipdb_iptoasn/asn_ipv6.txt
-    cat ./iptoasn_asn_ipv4.tmp ./iptoasn_asn_ipv6.tmp > ../cnipdb_iptoasn/asn_ipv4_6.txt
+    cat ../cnipdb_iptoasn/asn_ipv4.txt ../cnipdb_iptoasn/asn_ipv6.txt > ../cnipdb_iptoasn/asn_ipv4_6.txt
     cat ./iptoasn_country_ipv4.tmp | sort | uniq | ./cidr-merger -s > ../cnipdb_iptoasn/country_ipv4.txt
     cat ./iptoasn_country_ipv6.tmp | sort | uniq | ./cidr-merger -s > ../cnipdb_iptoasn/country_ipv6.txt
-    cat ./iptoasn_country_ipv4.tmp ./iptoasn_country_ipv6.tmp > ../cnipdb_iptoasn/country_ipv4_6.txt
+    cat ../cnipdb_iptoasn/country_ipv4.txt ../cnipdb_iptoasn/country_ipv6.txt > ../cnipdb_iptoasn/country_ipv4_6.txt
 }
 
 ## Process
