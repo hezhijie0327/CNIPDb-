@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.4.7
+# Current Version: 1.4.8
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -245,7 +245,7 @@ function GetDataFromIPIPdotNET() {
         curl -s --connect-timeout 15 "${ipipdotnet_url[$ipipdotnet_url_task]}" >> ./ipipdotnet_${ipipdotnet_url_task}.zip
         unzip -o -d . ./ipipdotnet_${ipipdotnet_url_task}.zip && rm -rf ./ipipdotnet_${ipipdotnet_url_task}.zip
     done
-    ipipdotnet_country_ipv4_data=($(cat ./country.txt | grep 'CN' | cut -f 1 | sort | uniq | awk "{ print $2 }"))
+    ipipdotnet_country_ipv4_data=($(cat ./country.txt | grep 'CN$' | cut -f 1 | sort | uniq | awk "{ print $2 }"))
     for ipipdotnet_country_ipv4_data_task in "${!ipipdotnet_country_ipv4_data[@]}"; do
         echo "${ipipdotnet_country_ipv4_data[$ipipdotnet_country_ipv4_data_task]}" >> ./ipipdotnet_country_ipv4.tmp
     done
