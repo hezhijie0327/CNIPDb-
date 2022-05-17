@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.3.7
+# Current Version: 1.3.8
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -23,7 +23,7 @@ function GetDataFromDBIP() {
     )
     for dbip_url_task in "${!dbip_url[@]}"; do
         curl -s --connect-timeout 15 "${dbip_url[$dbip_url_task]}" >> ./dbip_${dbip_url_task}.csv.gz
-        gzip -d ./dbip_${dbip_url_task}.csv.gz
+        gzip -d ./dbip_${dbip_url_task}.csv.gz && mv ./dbip_${dbip_url_task}.csv ./$(echo ${dbip_url[$dbip_url_task]} | cut -d '/' -f 5 | cut -d '.' -f 1,2)
     done
     dbip_asn_ipv4_data=($(cat ./dbip-asn-lite-$(date '+%Y-%m').csv | grep 'China' | cut -d ',' -f 1,2 | tr ',' '-' | grep -v ':' | sort | uniq | awk "{ print $2 }"))
     dbip_asn_ipv6_data=($(cat ./dbip-asn-lite-$(date '+%Y-%m').csv | grep 'China' | cut -d ',' -f 1,2 | tr ',' '-' | grep ':' | sort | uniq | awk "{ print $2 }"))
@@ -55,13 +55,13 @@ function GetDataFromGeoLite2() {
         "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-Country-CSV&license_key={GEOLITE2_TOKEN}&suffix=zip"
     )
     for geolite2_url_task in "${!geolite2_url[@]}"; do
-        curl -s --connect-timeout 15 "${geolite2_url[$geolite2_url_task]}" >> ./ip2location_${geolite2_url_task}.zip
-        unzip -o -d . ./ip2location_${geolite2_url_task}.zip && rm -rf ./ip2location_${geolite2_url_task}.zip
+        curl -s --connect-timeout 15 "${geolite2_url[$geolite2_url_task]}" >> ./geolite2_${geolite2_url_task}.zip
+        unzip -o -d . ./geolite2_${geolite2_url_task}.zip && rm -rf ./geolite2_${geolite2_url_task}.zip
     done
-    geolite2_asn_ipv4_data=($(cat ./GeoLite2-ASN-Blocks-IPv4.csv | grep 'China' | cut -d ',' -f 1 | sort | uniq | awk "{ print $2 }"))
-    geolite2_asn_ipv6_data=($(cat ./GeoLite2-ASN-Blocks-IPv6.csv | grep 'China' | cut -d ',' -f 1 | sort | uniq | awk "{ print $2 }"))
-    geolite2_country_ipv4_data=($(cat ./GeoLite2-Country-Blocks-IPv4.csv | grep '1814991,1814991' | cut -d ',' -f 1 | sort | uniq | awk "{ print $2 }"))
-    geolite2_country_ipv6_data=($(cat ./GeoLite2-Country-Blocks-IPv6.csv | grep '1814991,1814991' | cut -d ',' -f 1 | sort | uniq | awk "{ print $2 }"))
+    geolite2_asn_ipv4_data=($(cat ./GeoLite2-ASN-CSV_*/GeoLite2-ASN-Blocks-IPv4.csv | grep 'China' | cut -d ',' -f 1 | sort | uniq | awk "{ print $2 }"))
+    geolite2_asn_ipv6_data=($(cat ./GeoLite2-ASN-CSV_*/GeoLite2-ASN-Blocks-IPv6.csv | grep 'China' | cut -d ',' -f 1 | sort | uniq | awk "{ print $2 }"))
+    geolite2_country_ipv4_data=($(cat ./GeoLite2-Country-CSV_*/GeoLite2-Country-Blocks-IPv4.csv | grep '1814991,1814991' | cut -d ',' -f 1 | sort | uniq | awk "{ print $2 }"))
+    geolite2_country_ipv6_data=($(cat ./GeoLite2-Country-CSV_*/GeoLite2-Country-Blocks-IPv6.csv | grep '1814991,1814991' | cut -d ',' -f 1 | sort | uniq | awk "{ print $2 }"))
     for geolite2_asn_ipv4_data_task in "${!geolite2_asn_ipv4_data[@]}"; do
         echo "${geolite2_asn_ipv4_data[$geolite2_asn_ipv4_data_task]}" >> ./geolite2_asn_ipv4.tmp
     done
@@ -215,7 +215,7 @@ function GetDataFromIPtoASN() {
     )
     for iptoasn_url_task in "${!iptoasn_url[@]}"; do
         curl -s --connect-timeout 15 "${iptoasn_url[$iptoasn_url_task]}" >> ./iptoasn_${iptoasn_url_task}.tsv.gz
-        gzip -d ./iptoasn_${iptoasn_url_task}.tsv.gz
+        gzip -d ./iptoasn_${iptoasn_url_task}.tsv.gz && mv ./iptoasn_url${iptoasn_url_task}.csv ./$(echo ${iptoasn_url[$iptoasn_url_task]} | cut -d '/' -f 5 | cut -d '.' -f 1,2)
     done
     iptoasn_asn_ipv4_data=($(cat ./ip2asn-v4.tsv | grep 'China' | cut -f 1,2 | tr '\t' '-' | sort | uniq | awk "{ print $2 }"))
     iptoasn_asn_ipv6_data=($(cat ./ip2asn-v6.tsv | grep 'China' | cut -f 1,2 | tr '\t' '-' | sort | uniq | awk "{ print $2 }"))
@@ -249,13 +249,13 @@ GetDataFromDBIP
 # Call GetDataFromGeoLite2
 GetDataFromGeoLite2
 # Call GetDataFromIANA
-GetDataFromIANA
+#GetDataFromIANA
 # Call GetDataFromIP2Location
-GetDataFromIP2Location
+#GetDataFromIP2Location
 # Cal GetDataFromIPdeny
-GetDataFromIPdeny
+#GetDataFromIPdeny
 # Call GetDataFromIPIP
-GetDataFromIPIP
+#GetDataFromIPIP
 # Call GetDataFromIPtoASN
 GetDataFromIPtoASN
 # Call EnvironmentCleanup
