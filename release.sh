@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.3.6
+# Current Version: 1.3.7
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -205,6 +205,41 @@ function GetDataFromIPIP() {
     done
     cat ./ipip_country_ipv4.tmp | sort | uniq | ./cidr-merger -s > ../cnipddb_ipip_country_ipv4.txt
 }
+# Get Data from IPtoASN
+function GetDataFromIPtoASN() {
+    iptoasn_url=(
+        "https://iptoasn.com/data/ip2asn-v4.tsv.gz"
+        "https://iptoasn.com/data/ip2asn-v6.tsv.gz"
+        "https://iptoasn.com/data/ip2country-v4.tsv.gz"
+        "https://iptoasn.com/data/ip2country-v6.tsv.gz"
+    )
+    for iptoasn_url_task in "${!iptoasn_url[@]}"; do
+        curl -s --connect-timeout 15 "${iptoasn_url[$iptoasn_url_task]}" >> ./iptoasn_${iptoasn_url_task}.tsv.gz
+        gzip -d ./iptoasn_${iptoasn_url_task}.tsv.gz
+    done
+    iptoasn_asn_ipv4_data=($(cat ./ip2asn-v4.tsv | grep 'China' | cut -f 1,2 | tr '\t' '-' | sort | uniq | awk "{ print $2 }"))
+    iptoasn_asn_ipv6_data=($(cat ./ip2asn-v6.tsv | grep 'China' | cut -f 1,2 | tr '\t' '-' | sort | uniq | awk "{ print $2 }"))
+    iptoasn_country_ipv4_data=($(cat ./ip2country-v4.tsv | grep 'CN' | cut -f 1,2 | tr '\t' '-' | sort | uniq | awk "{ print $2 }"))
+    iptoasn_country_ipv6_data=($(cat ./ip2country-v6.tsv | grep 'CN' | cut -f 1,2 | tr '\t' '-' | sort | uniq | awk "{ print $2 }"))
+    for iptoasn_asn_ipv4_data_task in "${!iptoasn_asn_ipv4_data[@]}"; do
+        echo "${iptoasn_asn_ipv4_data[$iptoasn_asn_ipv4_data_task]}" >> ./iptoasn_asn_ipv4.tmp
+    done
+    for iptoasn_asn_ipv6_data_task in "${!iptoasn_asn_ipv6_data[@]}"; do
+        echo "${iptoasn_asn_ipv6_data[$iptoasn_asn_ipv6_data_task]}" >> ./iptoasn_asn_ipv6.tmp
+    done
+    for iptoasn_country_ipv4_data_task in "${!iptoasn_country_ipv4_data[@]}"; do
+        echo "${iptoasn_country_ipv4_data[$iptoasn_country_ipv4_data_task]}" >> ./iptoasn_country_ipv4.tmp
+    done
+    for iptoasn_country_ipv6_data_task in "${!iptoasn_country_ipv6_data[@]}"; do
+        echo "${iptoasn_country_ipv6_data[$iptoasn_country_ipv6_data_task]}" >> ./iptoasn_country_ipv6.tmp
+    done
+    cat ./iptoasn_asn_ipv4.tmp | sort | uniq | ./cidr-merger -s > ../cnipddb_iptoasn_asn_ipv4.txt
+    cat ./iptoasn_asn_ipv6.tmp | sort | uniq | ./cidr-merger -s > ../cnipddb_iptoasn_asn_ipv6.txt
+    cat ./iptoasn_asn_ipv4.tmp ./iptoasn_asn_ipv6.tmp > ../cnipddb_iptoasn_asn_ipv4_6.txt
+    cat ./iptoasn_country_ipv4.tmp | sort | uniq | ./cidr-merger -s > ../cnipddb_iptoasn_country_ipv4.txt
+    cat ./iptoasn_country_ipv6.tmp | sort | uniq | ./cidr-merger -s > ../cnipddb_iptoasn_country_ipv6.txt
+    cat ./iptoasn_country_ipv4.tmp ./iptoasn_country_ipv6.tmp > ../cnipddb_iptoasn_country_ipv4_6.txt
+}
 
 ## Process
 # Call EnvironmentPreparation
@@ -221,5 +256,7 @@ GetDataFromIP2Location
 GetDataFromIPdeny
 # Call GetDataFromIPIP
 GetDataFromIPIP
+# Call GetDataFromIPtoASN
+GetDataFromIPtoASN
 # Call EnvironmentCleanup
 EnvironmentCleanup
