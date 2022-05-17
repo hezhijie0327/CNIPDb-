@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.4.2
+# Current Version: 1.4.3
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -14,6 +14,29 @@ function EnvironmentPreparation() {
 # Environment Cleanup
 function EnvironmentCleanup() {
     cd .. && rm -rf ./Temp
+}
+# Get Data from BGP
+function GetDataFromBGP() {
+    bgp_url=(
+        "https://raw.githubusercontent.com/gaoyifan/china-operator-ip/ip-lists/china6.txt"
+        "https://raw.githubusercontent.com/gaoyifan/china-operator-ip/ip-lists/china.txt"
+        "https://raw.githubusercontent.com/misakaio/chnroutes2/master/chnroutes.txt"
+    )
+    for bgp_url_task in "${!bgp_url[@]}"; do
+        curl -s --connect-timeout 15 "${bgp_url[$bgp_url_task]}" >> ./bgp_country_ipv4_6.tmp
+    done
+    bgp_country_ipv4_data=($(cat ./bgp_country_ipv4_6.tmp | grep -v "\:\|\#" | grep '.' | sort | uniq | awk "{ print $2 }"))
+    bgp_country_ipv6_data=($(cat ./bgp_country_ipv4_6.tmp | grep -v "\.\|\#" | grep ':' | sort | uniq | awk "{ print $2 }"))
+    for bgp_country_ipv4_data_task in "${!bgp_country_ipv4_data[@]}"; do
+        echo "${bgp_country_ipv4_data[$bgp_country_ipv4_data_task]}" >> ./bgp_country_ipv4.tmp
+    done
+    for bgp_country_ipv6_data_task in "${!bgp_country_ipv6_data[@]}"; do
+        echo "${bgp_country_ipv6_data[$bgp_country_ipv6_data_task]}" >> ./bgp_country_ipv6.tmp
+    done
+    mkdir ../cnipdb_bgp
+    cat ./bgp_country_ipv4.tmp | sort | uniq | ./cidr-merger -s > ../cnipdb_bgp/country_ipv4.txt
+    cat ./bgp_country_ipv6.tmp | sort | uniq | ./cidr-merger -s > ../cnipdb_bgp/country_ipv6.txt
+    cat ./bgp_country_ipv4.tmp ./bgp_country_ipv6.tmp > ../cnipdb_bgp/country_ipv4_6.txt
 }
 # Get Data from DBIP
 function GetDataFromDBIP() {
@@ -195,21 +218,21 @@ function GetDataFromIPdeny() {
     cat ./ipdeny_country_ipv6.tmp | sort | uniq | ./cidr-merger -s > ../cnipdb_ipdeny/country_ipv6.txt
     cat ./ipdeny_country_ipv4.tmp ./ipdeny_country_ipv6.tmp > ../cnipdb_ipdeny/country_ipv4_6.txt
 }
-# Get Data from IPIP
-function GetDataFromIPIP() {
-    ipip_url=(
+# Get Data from IPIPdotNET
+function GetDataFromIPIPdotNET() {
+    ipipdotnet_url=(
         "https://cdn.ipip.net/17mon/country.zip"
     )
-    for ipip_url_task in "${!ipip_url[@]}"; do
-        curl -s --connect-timeout 15 "${ipip_url[$ipip_url_task]}" >> ./ipip_${ipip_url_task}.zip
-        unzip -o -d . ./ipip_${ipip_url_task}.zip && rm -rf ./ipip_${ipip_url_task}.zip
+    for ipipdotnet_url_task in "${!ipipdotnet_url[@]}"; do
+        curl -s --connect-timeout 15 "${ipipdotnet_url[$ipipdotnet_url_task]}" >> ./ipipdotnet_${ipipdotnet_url_task}.zip
+        unzip -o -d . ./ipipdotnet_${ipipdotnet_url_task}.zip && rm -rf ./ipipdotnet_${ipipdotnet_url_task}.zip
     done
-    ipip_country_ipv4_data=($(cat ./country.txt | grep 'CN' | cut -f 1 | sort | uniq | awk "{ print $2 }"))
-    for ipip_country_ipv4_data_task in "${!ipip_country_ipv4_data[@]}"; do
-        echo "${ipip_country_ipv4_data[$ipip_country_ipv4_data_task]}" >> ./ipip_country_ipv4.tmp
+    ipipdotnet_country_ipv4_data=($(cat ./country.txt | grep 'CN' | cut -f 1 | sort | uniq | awk "{ print $2 }"))
+    for ipipdotnet_country_ipv4_data_task in "${!ipipdotnet_country_ipv4_data[@]}"; do
+        echo "${ipipdotnet_country_ipv4_data[$ipipdotnet_country_ipv4_data_task]}" >> ./ipipdotnet_country_ipv4.tmp
     done
-    mkdir ../cnipdb_ipip
-    cat ./ipip_country_ipv4.tmp | sort | uniq | ./cidr-merger -s > ../cnipdb_ipip/country_ipv4.txt
+    mkdir ../cnipdb_ipipdotnet
+    cat ./ipipdotnet_country_ipv4.tmp | sort | uniq | ./cidr-merger -s > ../cnipdb_ipipdotnet/country_ipv4.txt
 }
 # Get Data from IPtoASN
 function GetDataFromIPtoASN() {
@@ -251,6 +274,8 @@ function GetDataFromIPtoASN() {
 ## Process
 # Call EnvironmentPreparation
 EnvironmentPreparation
+# Call GetDataFromBGP
+GetDataFromBGP
 # Call GetDataFromDBIP
 GetDataFromDBIP
 # Call GetDataFromGeoLite2
@@ -261,8 +286,8 @@ GetDataFromIANA
 GetDataFromIP2Location
 # Cal GetDataFromIPdeny
 GetDataFromIPdeny
-# Call GetDataFromIPIP
-GetDataFromIPIP
+# Call GetDataFromIPIPdotNET
+GetDataFromIPIPdotNET
 # Call GetDataFromIPtoASN
 GetDataFromIPtoASN
 # Call EnvironmentCleanup
