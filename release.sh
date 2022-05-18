@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.4.8
+# Current Version: 1.4.9
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -9,6 +9,8 @@
 # Environment Preparation
 function EnvironmentPreparation() {
     rm -rf ./Temp ./cnipdb ./cnipdb_* && mkdir ./Temp ./cnipdb && cd ./Temp
+    export DEBIAN_FRONTEND="noninteractive" && apt install -qy bgpdump html2text
+    cargo install bgptools
     wget https://github.com/zhanhb/cidr-merger/releases/download/v$(curl -s --connect-timeout 15 "https://api.github.com/repos/zhanhb/cidr-merger/git/matching-refs/tags" | jq -Sr ".[].ref" | grep "^refs/tags/v" | tail -n 1 | sed "s/refs\/tags\/v//")/cidr-merger-linux-amd64 && mv ./cidr-merger-linux-amd64 ./cidr-merger && chmod +x ./cidr-merger
 }
 # Environment Cleanup
@@ -27,15 +29,16 @@ function EnvironmentCleanup() {
 # Get Data from BGP
 function GetDataFromBGP() {
     bgp_url=(
-        "https://raw.githubusercontent.com/gaoyifan/china-operator-ip/ip-lists/china6.txt"
-        "https://raw.githubusercontent.com/gaoyifan/china-operator-ip/ip-lists/china.txt"
-        "https://raw.githubusercontent.com/misakaio/chnroutes2/master/chnroutes.txt"
+        "http://archive.routeviews.org/dnszones/rib.bz2"
+        "http://archive.routeviews.org/route-views6/bgpdata/$(date '+%Y.%m')/RIBS/$(curl -s --connect-timeout 15 'http://archive.routeviews.org/route-views6/bgpdata/2022.05/RIBS/' | html2text | grep bz2 | awk '{print $3}'| tail -n 1 | cut -d ']' -f 1 | tr -d '[]')"
     )
     for bgp_url_task in "${!bgp_url[@]}"; do
-        curl -s --connect-timeout 15 "${bgp_url[$bgp_url_task]}" >> ./bgp_country_ipv4_6.tmp
+        curl -s --connect-timeout 15 "${bgp_url[$bgp_url_task]}" >> ./bgp_${bgp_url_task}.bz2
+        bgpdump -m ./bgp_${bgp_url_task}.bz2 >> ./bgp_url.tmp
     done
-    bgp_country_ipv4_data=($(cat ./bgp_country_ipv4_6.tmp | grep -v "\:\|\#" | grep '.' | sort | uniq | awk "{ print $2 }"))
-    bgp_country_ipv6_data=($(cat ./bgp_country_ipv4_6.tmp | grep -v "\.\|\#" | grep ':' | sort | uniq | awk "{ print $2 }"))
+    bgp_as_table=($(curl -s --connect-timeout 15 "https://bgp.potaroo.net/cidr/autnums.html" | awk '-F[<>]' '{print $3,$5}' | grep '^AS' | grep -P "CN\$" | grep -vPi "AS45102" | awk '{gsub(/AS/, ""); print $1}' | sort | uniq > ./bgp_as_table.tmp && cat ./bgp_as_table.tmp | awk "{ print $2 }"))
+    bgp_country_ipv4_data=($(cat ./bgp_as_table.tmp | xargs bgptools -b ./bgp_url.tmp | grep -v "\:\|\#" | grep '.' | sort | uniq | awk "{ print $2 }"))
+    bgp_country_ipv6_data=($(cat ./bgp_as_table.tmp | xargs bgptools -b ./bgp_url.tmp | grep -v "\.\|\#" | grep ':' | sort | uniq | awk "{ print $2 }"))
     for bgp_country_ipv4_data_task in "${!bgp_country_ipv4_data[@]}"; do
         echo "${bgp_country_ipv4_data[$bgp_country_ipv4_data_task]}" >> ./bgp_country_ipv4.tmp
     done
@@ -298,18 +301,18 @@ EnvironmentPreparation
 # Call GetDataFromBGP
 GetDataFromBGP
 # Call GetDataFromDBIP
-GetDataFromDBIP
+#GetDataFromDBIP
 # Call GetDataFromGeoLite2
-GetDataFromGeoLite2
+#GetDataFromGeoLite2
 # Call GetDataFromIANA
-GetDataFromIANA
+#GetDataFromIANA
 # Call GetDataFromIP2Location
-GetDataFromIP2Location
+#GetDataFromIP2Location
 # Cal GetDataFromIPdeny
-GetDataFromIPdeny
+#GetDataFromIPdeny
 # Call GetDataFromIPIPdotNET
-GetDataFromIPIPdotNET
+#GetDataFromIPIPdotNET
 # Call GetDataFromIPtoASN
-GetDataFromIPtoASN
+#GetDataFromIPtoASN
 # Call EnvironmentCleanup
 EnvironmentCleanup
