@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.5.7
+# Current Version: 1.5.8
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -28,17 +28,6 @@ function EnvironmentCleanup() {
     cat ../cnipdb/asn_country_ipv4.txt ../cnipdb/asn_country_ipv6.txt > ../cnipdb/asn_country_ipv4_6.txt
     cd .. && rm -rf ./Temp
 }
-# Get AS Table
-function GetASTable() {
-    bgp_as_table=($(curl -s --connect-timeout 15 "https://bgp.potaroo.net/cidr/autnums.html" | awk '-F[<>]' '{print $3,$5}' | grep '^AS' | grep -P "CN\$" | grep -vPi "AS45102" | awk '{gsub(/AS/, ""); print $1}' | sort | uniq > ./bgp_as_table.tmp && cat ./bgp_as_table.tmp | awk "{ print $2 }"))
-    ipipdotnet_as_table=($(curl -s --connect-timeout 15 "https://whois.ipip.net/countries/cn" | html2text | grep -v "\*\|\!" | grep ']' | cut -d ']' -f '1' | tr -d '[AS' | sort | uniq > ./ipipdotnet_as_table.tmp && cat ./ipipdotnet_as_table.tmp | awk "{ print $2 }"))
-    bgp_as_table_grep="" && for bgp_as_table_task in "${!bgp_as_table[@]}"; do
-        bgp_as_table_grep="${bgp_as_table[$bgp_as_table_task]}\|${bgp_as_table_grep}"
-    done && bgp_as_table_grep=${bgp_as_table_grep%??}
-    ipipdotnet_as_table_grep="" && for ipipdotnet_as_table_task in "${!ipipdotnet_as_table[@]}"; do
-        ipipdotnet_as_table_grep="${ipipdotnet_as_table[$ipipdotnet_as_table_task]}\|${ipipdotnet_as_table_grep}"
-    done && ipipdotnet_as_table_grep=${ipipdotnet_as_table_grep%??}
-}
 # Get Data from BGP
 function GetDataFromBGP() {
     bgp_url=(
@@ -49,6 +38,7 @@ function GetDataFromBGP() {
         curl -s --connect-timeout 15 "${bgp_url[$bgp_url_task]}" >> ./bgp_${bgp_url_task}.bz2
         bgpdump -m ./bgp_${bgp_url_task}.bz2 >> ./bgp_url.tmp
     done
+    bgp_as_table=($(curl -s --connect-timeout 15 "https://bgp.potaroo.net/cidr/autnums.html" | awk '-F[<>]' '{print $3,$5}' | grep '^AS' | grep -P "CN\$" | grep -vPi "AS45102" | awk '{gsub(/AS/, ""); print $1}' | sort | uniq > ./bgp_as_table.tmp && cat ./bgp_as_table.tmp | awk "{ print $2 }"))
     bgp_country_ipv4_data=($(cat ./bgp_as_table.tmp | xargs bgptools -b ./bgp_url.tmp | grep -v "\:\|\#" | grep '.' | sort | uniq | awk "{ print $2 }"))
     bgp_country_ipv6_data=($(cat ./bgp_as_table.tmp | xargs bgptools -b ./bgp_url.tmp | grep -v "\.\|\#\|^::/0$" | grep ':' | sort | uniq | awk "{ print $2 }"))
     for bgp_country_ipv4_data_task in "${!bgp_country_ipv4_data[@]}"; do
@@ -72,8 +62,8 @@ function GetDataFromDBIP() {
         curl -s --connect-timeout 15 "${dbip_url[$dbip_url_task]}" >> ./dbip_${dbip_url_task}.csv.gz
         gzip -d ./dbip_${dbip_url_task}.csv.gz && mv ./dbip_${dbip_url_task}.csv ./$(echo ${dbip_url[$dbip_url_task]} | cut -d '/' -f 5 | cut -d '.' -f 1,2)
     done
-    dbip_asn_ipv4_data=($(cat ./dbip-asn-lite-$(date '+%Y-%m').csv | grep 'China' | grep "${ipipdotnet_as_table_grep}" | cut -d ',' -f 1,2 | tr ',' '-' | grep -v ':' | sort | uniq | awk "{ print $2 }"))
-    dbip_asn_ipv6_data=($(cat ./dbip-asn-lite-$(date '+%Y-%m').csv | grep 'China' | grep "${ipipdotnet_as_table_grep}" | cut -d ',' -f 1,2 | tr ',' '-' | grep ':' | sort | uniq | awk "{ print $2 }"))
+    dbip_asn_ipv4_data=($(cat ./dbip-asn-lite-$(date '+%Y-%m').csv | grep 'China' | cut -d ',' -f 1,2 | tr ',' '-' | grep -v ':' | sort | uniq | awk "{ print $2 }"))
+    dbip_asn_ipv6_data=($(cat ./dbip-asn-lite-$(date '+%Y-%m').csv | grep 'China' | cut -d ',' -f 1,2 | tr ',' '-' | grep ':' | sort | uniq | awk "{ print $2 }"))
     dbip_country_ipv4_data=($(cat ./dbip-country-lite-$(date '+%Y-%m').csv | grep 'CN' | cut -d ',' -f 1,2 | tr ',' '-' | grep -v ':' | sort | uniq | awk "{ print $2 }"))
     dbip_country_ipv6_data=($(cat ./dbip-country-lite-$(date '+%Y-%m').csv | grep 'CN' | cut -d ',' -f 1,2 | tr ',' '-' | grep ':' | sort | uniq | awk "{ print $2 }"))
     for dbip_asn_ipv4_data_task in "${!dbip_asn_ipv4_data[@]}"; do
@@ -109,8 +99,8 @@ function GetDataFromGeoLite2() {
         curl -s --connect-timeout 15 "${geolite2_url[$geolite2_url_task]}" >> ./geolite2_${geolite2_url_task}.zip
         unzip -o -d . ./geolite2_${geolite2_url_task}.zip && rm -rf ./geolite2_${geolite2_url_task}.zip
     done
-    geolite2_asn_ipv4_data=($(cat ./GeoLite2-ASN-CSV_*/GeoLite2-ASN-Blocks-IPv4.csv | grep 'China' | grep "${ipipdotnet_as_table_grep}" | cut -d ',' -f 1 | sort | uniq | awk "{ print $2 }"))
-    geolite2_asn_ipv6_data=($(cat ./GeoLite2-ASN-CSV_*/GeoLite2-ASN-Blocks-IPv6.csv | grep 'China' | grep "${ipipdotnet_as_table_grep}" | cut -d ',' -f 1 | sort | uniq | awk "{ print $2 }"))
+    geolite2_asn_ipv4_data=($(cat ./GeoLite2-ASN-CSV_*/GeoLite2-ASN-Blocks-IPv4.csv | grep 'China' | cut -d ',' -f 1 | sort | uniq | awk "{ print $2 }"))
+    geolite2_asn_ipv6_data=($(cat ./GeoLite2-ASN-CSV_*/GeoLite2-ASN-Blocks-IPv6.csv | grep 'China' | cut -d ',' -f 1 | sort | uniq | awk "{ print $2 }"))
     geolite2_country_ipv4_data=($(cat ./GeoLite2-Country-CSV_*/GeoLite2-Country-Blocks-IPv4.csv | grep '1814991,1814991' | cut -d ',' -f 1 | sort | uniq | awk "{ print $2 }"))
     geolite2_country_ipv6_data=($(cat ./GeoLite2-Country-CSV_*/GeoLite2-Country-Blocks-IPv6.csv | grep '1814991,1814991' | cut -d ',' -f 1 | sort | uniq | awk "{ print $2 }"))
     for geolite2_asn_ipv4_data_task in "${!geolite2_asn_ipv4_data[@]}"; do
@@ -198,8 +188,8 @@ function GetDataFromIP2Location() {
         curl -s --connect-timeout 15 "${ip2location_url[$ip2location_url_task]}" >> ./ip2location_${ip2location_url_task}.zip
         unzip -o -d . ./ip2location_${ip2location_url_task}.zip && rm -rf ./ip2location_${ip2location_url_task}.zip
     done
-    ip2location_asn_ipv4_data=($(cat ./IP2LOCATION-LITE-ASN.CSV | grep 'China' | grep "${ipipdotnet_as_table_grep}" | cut -d ',' -f 3 | tr -d '"' | tr ',' '-' | sort | uniq | awk "{ print $2 }"))
-    ip2location_asn_ipv6_data=($(cat ./IP2LOCATION-LITE-ASN.IPV6.CSV | grep 'China' | grep "${ipipdotnet_as_table_grep}" | cut -d ',' -f 3 | tr -d '"' | tr ',' '-' | sort | uniq | awk "{ print $2 }"))
+    ip2location_asn_ipv4_data=($(cat ./IP2LOCATION-LITE-ASN.CSV | grep 'China' | cut -d ',' -f 3 | tr -d '"' | tr ',' '-' | sort | uniq | awk "{ print $2 }"))
+    ip2location_asn_ipv6_data=($(cat ./IP2LOCATION-LITE-ASN.IPV6.CSV | grep 'China' | cut -d ',' -f 3 | tr -d '"' | tr ',' '-' | sort | uniq | awk "{ print $2 }"))
     ip2location_country_ipv4_data=($(cat ./IP2LOCATION-LITE-DB1.CSV | grep '"CN","China"' | cut -d ',' -f 1,2 | tr -d '"' | tr ',' '-' | sort | uniq | awk "{ print $2 }"))
     ip2location_country_ipv6_data=($(cat ./IP2LOCATION-LITE-DB1.IPV6.CSV | grep '"CN","China"' | cut -d ',' -f 1,2 | tr -d '"' | tr ',' '-' | sort | uniq | awk "{ print $2 }"))
     for ip2location_asn_ipv4_data_task in "${!ip2location_asn_ipv4_data[@]}"; do
@@ -279,8 +269,8 @@ function GetDataFromIPtoASN() {
         curl -s --connect-timeout 15 "${iptoasn_url[$iptoasn_url_task]}" >> ./iptoasn_${iptoasn_url_task}.tsv.gz
         gzip -d ./iptoasn_${iptoasn_url_task}.tsv.gz && mv ./iptoasn_${iptoasn_url_task}.tsv ./$(echo ${iptoasn_url[$iptoasn_url_task]} | cut -d '/' -f 5 | cut -d '.' -f 1,2)
     done
-    iptoasn_asn_ipv4_data=($(cat ./ip2asn-v4.tsv | grep 'China' | grep "${ipipdotnet_as_table_grep}" | cut -f 1,2 | tr '\t' '-' | sort | uniq | awk "{ print $2 }"))
-    iptoasn_asn_ipv6_data=($(cat ./ip2asn-v6.tsv | grep 'China' | grep "${ipipdotnet_as_table_grep}" | cut -f 1,2 | tr '\t' '-' | sort | uniq | awk "{ print $2 }"))
+    iptoasn_asn_ipv4_data=($(cat ./ip2asn-v4.tsv | grep 'China' | cut -f 1,2 | tr '\t' '-' | sort | uniq | awk "{ print $2 }"))
+    iptoasn_asn_ipv6_data=($(cat ./ip2asn-v6.tsv | grep 'China' | cut -f 1,2 | tr '\t' '-' | sort | uniq | awk "{ print $2 }"))
     iptoasn_country_ipv4_data=($(cat ./ip2country-v4.tsv | grep 'CN' | cut -f 1,2 | tr '\t' '-' | sort | uniq | awk "{ print $2 }"))
     iptoasn_country_ipv6_data=($(cat ./ip2country-v6.tsv | grep 'CN' | cut -f 1,2 | tr '\t' '-' | sort | uniq | awk "{ print $2 }"))
     for iptoasn_asn_ipv4_data_task in "${!iptoasn_asn_ipv4_data[@]}"; do
@@ -310,8 +300,6 @@ function GetDataFromIPtoASN() {
 ## Process
 # Call EnvironmentPreparation
 EnvironmentPreparation
-# Call GetASTable
-GetASTable
 # Call GetDataFromBGP
 GetDataFromBGP
 # Call GetDataFromDBIP
