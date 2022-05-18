@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.5.0
+# Current Version: 1.5.1
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -9,7 +9,7 @@
 # Environment Preparation
 function EnvironmentPreparation() {
     rm -rf ./Temp ./cnipdb ./cnipdb_* && mkdir ./Temp ./cnipdb && cd ./Temp
-    export DEBIAN_FRONTEND="noninteractive" && apt update && apt install -qy bgpdump html2text
+    export DEBIAN_FRONTEND="noninteractive" && apt update && apt install -qy bgpdump cargo html2text
     cargo install bgptools
     wget https://github.com/zhanhb/cidr-merger/releases/download/v$(curl -s --connect-timeout 15 "https://api.github.com/repos/zhanhb/cidr-merger/git/matching-refs/tags" | jq -Sr ".[].ref" | grep "^refs/tags/v" | tail -n 1 | sed "s/refs\/tags\/v//")/cidr-merger-linux-amd64 && mv ./cidr-merger-linux-amd64 ./cidr-merger && chmod +x ./cidr-merger
 }
