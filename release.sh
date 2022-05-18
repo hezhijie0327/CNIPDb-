@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.5.4
+# Current Version: 1.5.5
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -12,7 +12,7 @@ function EnvironmentPreparation() {
     export PATH="/root/.cargo/bin:/root/go/bin:$PATH"
     rm -rf ./Temp ./cnipdb ./cnipdb_* && mkdir ./Temp ./cnipdb && cd ./Temp
     apt update && apt install -qy bgpdump cargo html2text
-    cargo install bgptools
+    cargo install --vers 0.0.3 bgptools
     go get github.com/zhanhb/cidr-merger
 }
 # Environment Cleanup
