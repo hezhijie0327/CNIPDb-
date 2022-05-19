@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.5.9
+# Current Version: 1.6.0
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -8,7 +8,7 @@
 ## Function
 # Environment Preparation
 function EnvironmentPreparation() {
-    export ASN_CN_GREP="Africa\|Altyn\|Americas\|Asia\|Brasil\|Chinae\|Chinatrust\|Europe\|europe\|Global\|H\.K\.\|HK\|HongKong\|Hong\ Kong\|International\|Singapore"
+    export ASN_CN_GREP="Africa\|Altyn\|Americas\|Asia\|Brasil\|Chinae\|Chinatrust\|Europe\|europe\|Global\|H\.K\.\|HK\|HongKong\|Hong\ Kong\|International\|Singapore\|South\ China\ Morning\ Post\ Publishers\ Limited"
     export DEBIAN_FRONTEND="noninteractive"
     export PATH="/root/.cargo/bin:/root/go/bin:$PATH"
     rm -rf ./Temp ./cnipdb ./cnipdb_* && mkdir ./Temp ./cnipdb && cd ./Temp
