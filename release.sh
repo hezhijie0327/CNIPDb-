@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.6.2
+# Current Version: 1.6.3
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -8,7 +8,7 @@
 ## Function
 # Environment Preparation
 function EnvironmentPreparation() {
-    export ASN_CN_GREP="AFRICA\|ALTYN\|AMERICAS\|ASIA\|BRASIL\|CHINAE\|CHINATRUST\|EUROPE\|GLOBAL\|H\.K\.\|HK\|HONGKONG\|HONG\ KONG\|INTERNATIONAL\|SINGAPORE\|SOUTH\ CHINA\ MORNING\ POST\ PUBLISHERS\ LIMITED"
+    export ASN_CN_GREP="AFRICA\|ALTYN\|AMERICAS\|ASIA\|BRASIL\|CHINACAM\|CHINACHEN\|CHINAE\|CHINATRUST\|EUROPE\|GALICHINA\|GLOBAL\|H\.K\.\|HK\|HONGKONG\|HONG\ KONG\|INTERNATIONAL\|SINGAPORE\|SOUTH\ CHINA\ MORNING\ POST\ PUBLISHERS\ LIMITED\|TELEKACHINA"
     export DEBIAN_FRONTEND="noninteractive"
     export PATH="/root/.cargo/bin:/root/go/bin:$PATH"
     rm -rf ./Temp ./cnipdb ./cnipdb_* && mkdir ./Temp ./cnipdb && cd ./Temp
@@ -279,8 +279,8 @@ function GetDataFromIPtoASN() {
         curl -s --connect-timeout 15 "${iptoasn_url[$iptoasn_url_task]}" >> ./iptoasn_${iptoasn_url_task}.tsv.gz
         gzip -d ./iptoasn_${iptoasn_url_task}.tsv.gz && mv ./iptoasn_${iptoasn_url_task}.tsv ./$(echo ${iptoasn_url[$iptoasn_url_task]} | cut -d '/' -f 5 | cut -d '.' -f 1,2)
     done
-    iptoasn_asn_ipv4_data=($(cat ./ip2asn-v4.tsv | tr 'a-z' 'A-Z' | grep "CHINA\|CNNIC" | grep -v "${ASN_CN_GREP}" | cut -f 1,2 | tr '\t' '-' | sort | uniq | awk "{ print $2 }"))
-    iptoasn_asn_ipv6_data=($(cat ./ip2asn-v6.tsv | tr 'a-z' 'A-Z' | grep "CHINA\|CNNIC" | grep -v "${ASN_CN_GREP}" | cut -f 1,2 | tr '\t' '-' | sort | uniq | awk "{ print $2 }"))
+    iptoasn_asn_ipv4_data=($(cat ./ip2asn-v4.tsv | grep 'CN	' | tr 'a-z' 'A-Z' | grep "CHINA\|CNNIC" | grep -v "${ASN_CN_GREP}" | cut -f 1,2 | tr '\t' '-' | sort | uniq | awk "{ print $2 }"))
+    iptoasn_asn_ipv6_data=($(cat ./ip2asn-v6.tsv | grep 'CN	' | tr 'a-z' 'A-Z' | grep "CHINA\|CNNIC" | grep -v "${ASN_CN_GREP}" | cut -f 1,2 | tr '\t' '-' | sort | uniq | awk "{ print $2 }"))
     iptoasn_country_ipv4_data=($(cat ./ip2country-v4.tsv | grep 'CN' | cut -f 1,2 | tr '\t' '-' | sort | uniq | awk "{ print $2 }"))
     iptoasn_country_ipv6_data=($(cat ./ip2country-v6.tsv | grep 'CN' | cut -f 1,2 | tr '\t' '-' | sort | uniq | awk "{ print $2 }"))
     for iptoasn_asn_ipv4_data_task in "${!iptoasn_asn_ipv4_data[@]}"; do
