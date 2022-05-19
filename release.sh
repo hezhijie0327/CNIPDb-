@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.6.1
+# Current Version: 1.6.2
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -35,12 +35,21 @@ function GetDataFromBGP() {
         "http://archive.routeviews.org/dnszones/rib.bz2"
         "http://archive.routeviews.org/route-views6/bgpdata/$(date '+%Y.%m')/RIBS/$(curl -s --connect-timeout 15 'http://archive.routeviews.org/route-views6/bgpdata/2022.05/RIBS/' | html2text | grep bz2 | awk '{print $3}'| tail -n 1 | cut -d ']' -f 1 | tr -d '[]')"
     )
+    bgp_plain_url=(
+        "https://raw.githubusercontent.com/misakaio/chnroutes2/master/chnroutes.txt"
+    )
     for bgp_url_task in "${!bgp_url[@]}"; do
         curl -s --connect-timeout 15 "${bgp_url[$bgp_url_task]}" >> ./bgp_${bgp_url_task}.bz2
         bgpdump -m ./bgp_${bgp_url_task}.bz2 >> ./bgp_url.tmp
     done
+    for bgp_plain_url_task in "${!bgp_plain_url[@]}"; do
+        curl -s --connect-timeout 15 "${bgp_plain_url[$bgp_plain_url_task]}" >> ./bgp_plain_url.tmp
+    done
     bgp_as_table=($(curl -s --connect-timeout 15 "https://bgp.potaroo.net/cidr/autnums.html" | awk '-F[<>]' '{print $3,$5}' | grep '^AS' | grep -P "CN\$" | grep -vPi "AS45102" | awk '{gsub(/AS/, ""); print $1}' | sort | uniq > ./bgp_as_table.tmp && cat ./bgp_as_table.tmp | awk "{ print $2 }"))
-    bgp_country_ipv4_data=($(cat ./bgp_as_table.tmp | xargs bgptools -b ./bgp_url.tmp | grep -v "\:\|\#" | grep '.' | sort | uniq | awk "{ print $2 }"))
+    bgp_country_ipv4_data=(
+        $(cat ./bgp_as_table.tmp | xargs bgptools -b ./bgp_url.tmp | grep -v "\:\|\#" | grep '.' | sort | uniq | awk "{ print $2 }")
+        $(cat ./bgp_plain_url.tmp | grep -v "\:\|\#" | grep '.' | sort | uniq | awk "{ print $2 }")
+    )
     bgp_country_ipv6_data=($(cat ./bgp_as_table.tmp | xargs bgptools -b ./bgp_url.tmp | grep -v "\.\|\#\|^::/0$" | grep ':' | sort | uniq | awk "{ print $2 }"))
     for bgp_country_ipv4_data_task in "${!bgp_country_ipv4_data[@]}"; do
         echo "${bgp_country_ipv4_data[$bgp_country_ipv4_data_task]}" >> ./bgp_country_ipv4.tmp
