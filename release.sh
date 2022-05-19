@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.6.0
+# Current Version: 1.6.1
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -8,7 +8,7 @@
 ## Function
 # Environment Preparation
 function EnvironmentPreparation() {
-    export ASN_CN_GREP="Africa\|Altyn\|Americas\|Asia\|Brasil\|Chinae\|Chinatrust\|Europe\|europe\|Global\|H\.K\.\|HK\|HongKong\|Hong\ Kong\|International\|Singapore\|South\ China\ Morning\ Post\ Publishers\ Limited"
+    export ASN_CN_GREP="AFRICA\|ALTYN\|AMERICAS\|ASIA\|BRASIL\|CHINAE\|CHINATRUST\|EUROPE\|GLOBAL\|H\.K\.\|HK\|HONGKONG\|HONG\ KONG\|INTERNATIONAL\|SINGAPORE\|SOUTH\ CHINA\ MORNING\ POST\ PUBLISHERS\ LIMITED"
     export DEBIAN_FRONTEND="noninteractive"
     export PATH="/root/.cargo/bin:/root/go/bin:$PATH"
     rm -rf ./Temp ./cnipdb ./cnipdb_* && mkdir ./Temp ./cnipdb && cd ./Temp
@@ -63,8 +63,8 @@ function GetDataFromDBIP() {
         curl -s --connect-timeout 15 "${dbip_url[$dbip_url_task]}" >> ./dbip_${dbip_url_task}.csv.gz
         gzip -d ./dbip_${dbip_url_task}.csv.gz && mv ./dbip_${dbip_url_task}.csv ./$(echo ${dbip_url[$dbip_url_task]} | cut -d '/' -f 5 | cut -d '.' -f 1,2)
     done
-    dbip_asn_ipv4_data=($(cat ./dbip-asn-lite-$(date '+%Y-%m').csv | grep 'China' | grep -v "${ASN_CN_GREP}" | cut -d ',' -f 1,2 | tr ',' '-' | grep -v ':' | sort | uniq | awk "{ print $2 }"))
-    dbip_asn_ipv6_data=($(cat ./dbip-asn-lite-$(date '+%Y-%m').csv | grep 'China' | grep -v "${ASN_CN_GREP}" | cut -d ',' -f 1,2 | tr ',' '-' | grep ':' | sort | uniq | awk "{ print $2 }"))
+    dbip_asn_ipv4_data=($(cat ./dbip-asn-lite-$(date '+%Y-%m').csv | tr 'a-z' 'A-Z' | grep "CHINA\|CNNIC" | grep -v "${ASN_CN_GREP}" | cut -d ',' -f 1,2 | tr ',' '-' | grep -v ':' | sort | uniq | awk "{ print $2 }"))
+    dbip_asn_ipv6_data=($(cat ./dbip-asn-lite-$(date '+%Y-%m').csv | tr 'a-z' 'A-Z' | grep "CHINA\|CNNIC" | grep -v "${ASN_CN_GREP}" | cut -d ',' -f 1,2 | tr ',' '-' | grep ':' | sort | uniq | awk "{ print $2 }"))
     dbip_country_ipv4_data=($(cat ./dbip-country-lite-$(date '+%Y-%m').csv | grep 'CN' | cut -d ',' -f 1,2 | tr ',' '-' | grep -v ':' | sort | uniq | awk "{ print $2 }"))
     dbip_country_ipv6_data=($(cat ./dbip-country-lite-$(date '+%Y-%m').csv | grep 'CN' | cut -d ',' -f 1,2 | tr ',' '-' | grep ':' | sort | uniq | awk "{ print $2 }"))
     for dbip_asn_ipv4_data_task in "${!dbip_asn_ipv4_data[@]}"; do
@@ -100,8 +100,8 @@ function GetDataFromGeoLite2() {
         curl -s --connect-timeout 15 "${geolite2_url[$geolite2_url_task]}" >> ./geolite2_${geolite2_url_task}.zip
         unzip -o -d . ./geolite2_${geolite2_url_task}.zip && rm -rf ./geolite2_${geolite2_url_task}.zip
     done
-    geolite2_asn_ipv4_data=($(cat ./GeoLite2-ASN-CSV_*/GeoLite2-ASN-Blocks-IPv4.csv | grep 'China' | grep -v "${ASN_CN_GREP}" | cut -d ',' -f 1 | sort | uniq | awk "{ print $2 }"))
-    geolite2_asn_ipv6_data=($(cat ./GeoLite2-ASN-CSV_*/GeoLite2-ASN-Blocks-IPv6.csv | grep 'China' | grep -v "${ASN_CN_GREP}" | cut -d ',' -f 1 | sort | uniq | awk "{ print $2 }"))
+    geolite2_asn_ipv4_data=($(cat ./GeoLite2-ASN-CSV_*/GeoLite2-ASN-Blocks-IPv4.csv | tr 'a-z' 'A-Z' | grep "CHINA\|CNNIC" | grep -v "${ASN_CN_GREP}" | cut -d ',' -f 1 | sort | uniq | awk "{ print $2 }"))
+    geolite2_asn_ipv6_data=($(cat ./GeoLite2-ASN-CSV_*/GeoLite2-ASN-Blocks-IPv6.csv | tr 'a-z' 'A-Z' | grep "CHINA\|CNNIC" | grep -v "${ASN_CN_GREP}" | cut -d ',' -f 1 | sort | uniq | awk "{ print $2 }"))
     geolite2_country_ipv4_data=($(cat ./GeoLite2-Country-CSV_*/GeoLite2-Country-Blocks-IPv4.csv | grep '1814991,1814991' | cut -d ',' -f 1 | sort | uniq | awk "{ print $2 }"))
     geolite2_country_ipv6_data=($(cat ./GeoLite2-Country-CSV_*/GeoLite2-Country-Blocks-IPv6.csv | grep '1814991,1814991' | cut -d ',' -f 1 | sort | uniq | awk "{ print $2 }"))
     for geolite2_asn_ipv4_data_task in "${!geolite2_asn_ipv4_data[@]}"; do
@@ -189,8 +189,8 @@ function GetDataFromIP2Location() {
         curl -s --connect-timeout 15 "${ip2location_url[$ip2location_url_task]}" >> ./ip2location_${ip2location_url_task}.zip
         unzip -o -d . ./ip2location_${ip2location_url_task}.zip && rm -rf ./ip2location_${ip2location_url_task}.zip
     done
-    ip2location_asn_ipv4_data=($(cat ./IP2LOCATION-LITE-ASN.CSV | grep 'China' | grep -v "${ASN_CN_GREP}" | cut -d ',' -f 3 | tr -d '"' | tr ',' '-' | sort | uniq | awk "{ print $2 }"))
-    ip2location_asn_ipv6_data=($(cat ./IP2LOCATION-LITE-ASN.IPV6.CSV | grep 'China' | grep -v "${ASN_CN_GREP}" | cut -d ',' -f 3 | tr -d '"' | tr ',' '-' | sort | uniq | awk "{ print $2 }"))
+    ip2location_asn_ipv4_data=($(cat ./IP2LOCATION-LITE-ASN.CSV | tr 'a-z' 'A-Z' | grep "CHINA\|CNNIC" | grep -v "${ASN_CN_GREP}" | cut -d ',' -f 3 | tr -d '"' | tr ',' '-' | sort | uniq | awk "{ print $2 }"))
+    ip2location_asn_ipv6_data=($(cat ./IP2LOCATION-LITE-ASN.IPV6.CSV | tr 'a-z' 'A-Z' | grep "CHINA\|CNNIC" | grep -v "${ASN_CN_GREP}" | cut -d ',' -f 3 | tr -d '"' | tr ',' '-' | sort | uniq | awk "{ print $2 }"))
     ip2location_country_ipv4_data=($(cat ./IP2LOCATION-LITE-DB1.CSV | grep '"CN","China"' | cut -d ',' -f 1,2 | tr -d '"' | tr ',' '-' | sort | uniq | awk "{ print $2 }"))
     ip2location_country_ipv6_data=($(cat ./IP2LOCATION-LITE-DB1.IPV6.CSV | grep '"CN","China"' | cut -d ',' -f 1,2 | tr -d '"' | tr ',' '-' | sort | uniq | awk "{ print $2 }"))
     for ip2location_asn_ipv4_data_task in "${!ip2location_asn_ipv4_data[@]}"; do
@@ -270,8 +270,8 @@ function GetDataFromIPtoASN() {
         curl -s --connect-timeout 15 "${iptoasn_url[$iptoasn_url_task]}" >> ./iptoasn_${iptoasn_url_task}.tsv.gz
         gzip -d ./iptoasn_${iptoasn_url_task}.tsv.gz && mv ./iptoasn_${iptoasn_url_task}.tsv ./$(echo ${iptoasn_url[$iptoasn_url_task]} | cut -d '/' -f 5 | cut -d '.' -f 1,2)
     done
-    iptoasn_asn_ipv4_data=($(cat ./ip2asn-v4.tsv | grep 'China' | grep -v "${ASN_CN_GREP}" | cut -f 1,2 | tr '\t' '-' | sort | uniq | awk "{ print $2 }"))
-    iptoasn_asn_ipv6_data=($(cat ./ip2asn-v6.tsv | grep 'China' | grep -v "${ASN_CN_GREP}" | cut -f 1,2 | tr '\t' '-' | sort | uniq | awk "{ print $2 }"))
+    iptoasn_asn_ipv4_data=($(cat ./ip2asn-v4.tsv | tr 'a-z' 'A-Z' | grep "CHINA\|CNNIC" | grep -v "${ASN_CN_GREP}" | cut -f 1,2 | tr '\t' '-' | sort | uniq | awk "{ print $2 }"))
+    iptoasn_asn_ipv6_data=($(cat ./ip2asn-v6.tsv | tr 'a-z' 'A-Z' | grep "CHINA\|CNNIC" | grep -v "${ASN_CN_GREP}" | cut -f 1,2 | tr '\t' '-' | sort | uniq | awk "{ print $2 }"))
     iptoasn_country_ipv4_data=($(cat ./ip2country-v4.tsv | grep 'CN' | cut -f 1,2 | tr '\t' '-' | sort | uniq | awk "{ print $2 }"))
     iptoasn_country_ipv6_data=($(cat ./ip2country-v6.tsv | grep 'CN' | cut -f 1,2 | tr '\t' '-' | sort | uniq | awk "{ print $2 }"))
     for iptoasn_asn_ipv4_data_task in "${!iptoasn_asn_ipv4_data[@]}"; do
