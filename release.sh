@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.6.4
+# Current Version: 1.6.5
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -291,6 +291,28 @@ function GetDataFromIPtoASN() {
     cat ./iptoasn_country_ipv6.tmp | sort | uniq | cidr-merger -s > ../cnipdb_iptoasn/country_ipv6.txt
     cat ../cnipdb_iptoasn/country_ipv4.txt ../cnipdb_iptoasn/country_ipv6.txt > ../cnipdb_iptoasn/country_ipv4_6.txt
 }
+# Get Data from VXLINK
+function GetDataFromVXLINK() {
+    ipdeny_url=(
+        "https://raw.githubusercontent.com/tmplink/IPDB/main/ipv4/cidr/CN.txt"
+        "https://raw.githubusercontent.com/tmplink/IPDB/main/ipv6/cidr/CN.txt"
+    )
+    for vxlink_url_task in "${!vxlink_url[@]}"; do
+        curl -s --connect-timeout 15 "${vxlink_url[$vxlink_url_task]}" >> ./vxlink_country_ipv4_6.tmp
+    done
+    vxlink_country_ipv4_data=($(cat ./vxlink_country_ipv4_6.tmp | grep '.' | sort | uniq | awk "{ print $2 }"))
+    vxlink_country_ipv6_data=($(cat ./vxlink_country_ipv4_6.tmp | grep ':' | sort | uniq | awk "{ print $2 }"))
+    for vxlink_country_ipv4_data_task in "${!vxlink_country_ipv4_data[@]}"; do
+        echo "${vxlink_country_ipv4_data[$vxlink_country_ipv4_data_task]}" >> ./vxlink_country_ipv4.tmp
+    done
+    for vxlink_country_ipv6_data_task in "${!vxlink_country_ipv6_data[@]}"; do
+        echo "${vxlink_country_ipv6_data[$vxlink_country_ipv6_data_task]}" >> ./vxlink_country_ipv6.tmp
+    done
+    mkdir ../cnipdb_vxlink
+    cat ./vxlink_country_ipv4.tmp | sort | uniq | cidr-merger -s > ../cnipdb_vxlink/country_ipv4.txt
+    cat ./vxlink_country_ipv6.tmp | sort | uniq | cidr-merger -s > ../cnipdb_vxlink/country_ipv6.txt
+    cat ../cnipdb_vxlink/country_ipv4.txt ../cnipdb_vxlink/country_ipv6.txt > ../cnipdb_vxlink/country_ipv4_6.txt
+}
 
 ## Process
 # Call EnvironmentPreparation
@@ -311,5 +333,7 @@ GetDataFromIPdeny
 GetDataFromIPIPdotNET
 # Call GetDataFromIPtoASN
 GetDataFromIPtoASN
+# Call GetDataFromVXLINK
+GetDataFromVXLINK
 # Call EnvironmentCleanup
 EnvironmentCleanup
