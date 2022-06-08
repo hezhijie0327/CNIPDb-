@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.6.6
+# Current Version: 1.6.7
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -58,6 +58,21 @@ function GetDataFromBGP() {
     cat ./bgp_country_ipv4.tmp | sort | uniq | cidr-merger -s > ../cnipdb_bgp/country_ipv4.txt
     cat ./bgp_country_ipv6.tmp | sort | uniq | cidr-merger -s > ../cnipdb_bgp/country_ipv6.txt
     cat ../cnipdb_bgp/country_ipv4.txt ../cnipdb_bgp/country_ipv6.txt > ../cnipdb_bgp/country_ipv4_6.txt
+}
+# Get Data from CZ88dotnet
+function GetDataFromCZ88dotnet() {
+    cz88dotnet_url=(
+        "https://raw.githubusercontent.com/metowolf/iplist/master/data/country/CN.txt"
+    )
+    for cz88dotnet_url_task in "${!cz88dotnet_url[@]}"; do
+        curl -s --connect-timeout 15 "${cz88dotnet_url[$cz88dotnet_url_task]}" >> ./cz88dotnet_country_ipv4_6.tmp
+    done
+    cz88dotnet_country_ipv4_data=($(cat ./cz88dotnet_country_ipv4_6.tmp | sort | uniq | awk "{ print $2 }"))
+    for cz88dotnet_country_ipv4_data_task in "${!cz88dotnet_country_ipv4_data[@]}"; do
+        echo "${cz88dotnet_country_ipv4_data[$cz88dotnet_country_ipv4_data_task]}" >> ./cz88dotnet_country_ipv4.tmp
+    done
+    mkdir ../cnipdb_cz88dotnet
+    cat ./cz88dotnet_country_ipv4.tmp | sort | uniq | cidr-merger -s > ../cnipdb_cz88dotnet/country_ipv4.txt
 }
 # Get Data from DBIP
 function GetDataFromDBIP() {
@@ -319,6 +334,8 @@ function GetDataFromVXLINK() {
 EnvironmentPreparation
 # Call GetDataFromBGP
 GetDataFromBGP
+# Call GetDataFromCZ88dotnet
+GetDataFromCZ88dotnet
 # Call GetDataFromDBIP
 GetDataFromDBIP
 # Call GetDataFromGeoLite2
