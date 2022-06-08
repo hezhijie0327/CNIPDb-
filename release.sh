@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.6.5
+# Current Version: 1.6.6
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -293,7 +293,7 @@ function GetDataFromIPtoASN() {
 }
 # Get Data from VXLINK
 function GetDataFromVXLINK() {
-    ipdeny_url=(
+    vxlink_url=(
         "https://raw.githubusercontent.com/tmplink/IPDB/main/ipv4/cidr/CN.txt"
         "https://raw.githubusercontent.com/tmplink/IPDB/main/ipv6/cidr/CN.txt"
     )
