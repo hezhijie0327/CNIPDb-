@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.6.7
+# Current Version: 1.6.8
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -315,8 +315,8 @@ function GetDataFromVXLINK() {
     for vxlink_url_task in "${!vxlink_url[@]}"; do
         curl -s --connect-timeout 15 "${vxlink_url[$vxlink_url_task]}" >> ./vxlink_country_ipv4_6.tmp
     done
-    vxlink_country_ipv4_data=($(cat ./vxlink_country_ipv4_6.tmp | grep '.' | sort | uniq | awk "{ print $2 }"))
-    vxlink_country_ipv6_data=($(cat ./vxlink_country_ipv4_6.tmp | grep ':' | sort | uniq | awk "{ print $2 }"))
+    vxlink_country_ipv4_data=($(cat ./vxlink_country_ipv4_6.tmp | grep -v "\:" | grep '.' | sort | uniq | awk "{ print $2 }"))
+    vxlink_country_ipv6_data=($(cat ./vxlink_country_ipv4_6.tmp | grep -v "\." | grep ':' | sort | uniq | awk "{ print $2 }"))
     for vxlink_country_ipv4_data_task in "${!vxlink_country_ipv4_data[@]}"; do
         echo "${vxlink_country_ipv4_data[$vxlink_country_ipv4_data_task]}" >> ./vxlink_country_ipv4.tmp
     done
