@@ -145,6 +145,234 @@
         "outputName": "Country.mmdb"
       },
       "type": "maxmindMMDB"
+    },
+    {
+      "action": "output",
+      "args": {
+        "outputDir": "../cnipdb_bgp",
+        "outputName": "geoip.dat",
+        "wantedList": [
+          "cnipdb_bgp"
+        ]
+      },
+      "type": "v2rayGeoIPDat"
+    },
+    {
+      "action": "output",
+      "args": {
+        "outputDir": "../cnipdb_bgp",
+        "outputName": "Country.mmdb",
+        "wantedList": [
+          "cnipdb_bgp"
+        ]
+      },
+      "type": "maxmindMMDB"
+    },
+    {
+      "action": "output",
+      "args": {
+        "outputDir": "../cnipdb_cz88dotnet",
+        "outputName": "geoip.dat",
+        "wantedList": [
+          "cnipdb_cz88dotnet"
+        ]
+      },
+      "type": "v2rayGeoIPDat"
+    },
+    {
+      "action": "output",
+      "args": {
+        "outputDir": "../cnipdb_cz88dotnet",
+        "outputName": "Country.mmdb",
+        "wantedList": [
+          "cnipdb_cz88dotnet"
+        ]
+      },
+      "type": "maxmindMMDB"
+    },
+    {
+      "action": "output",
+      "args": {
+        "outputDir": "../cnipdb_dbip",
+        "outputName": "geoip.dat",
+        "wantedList": [
+          "cnipdb_dbip",
+          "cnipdb_dbip_asn"
+        ]
+      },
+      "type": "v2rayGeoIPDat"
+    },
+    {
+      "action": "output",
+      "args": {
+        "outputDir": "../cnipdb_dbip",
+        "outputName": "Country.mmdb",
+        "wantedList": [
+          "cnipdb_dbip",
+          "cnipdb_dbip_asn"
+        ]
+      },
+      "type": "maxmindMMDB"
+    },
+    {
+      "action": "output",
+      "args": {
+        "outputDir": "../cnipdb_geolite2",
+        "outputName": "geoip.dat",
+        "wantedList": [
+          "cnipdb_geolite2",
+          "cnipdb_geolite2_asn"
+        ]
+      },
+      "type": "v2rayGeoIPDat"
+    },
+    {
+      "action": "output",
+      "args": {
+        "outputDir": "../cnipdb_geolite2",
+        "outputName": "Country.mmdb",
+        "wantedList": [
+          "cnipdb_geolite2",
+          "cnipdb_geolite2_asn"
+        ]
+      },
+      "type": "maxmindMMDB"
+    },
+    {
+      "action": "output",
+      "args": {
+        "outputDir": "../cnipdb_iana",
+        "outputName": "geoip.dat",
+        "wantedList": [
+          "cnipdb_iana"
+        ]
+      },
+      "type": "v2rayGeoIPDat"
+    },
+    {
+      "action": "output",
+      "args": {
+        "outputDir": "../cnipdb_iana",
+        "outputName": "Country.mmdb",
+        "wantedList": [
+          "cnipdb_iana"
+        ]
+      },
+      "type": "maxmindMMDB"
+    },
+    {
+      "action": "output",
+      "args": {
+        "outputDir": "../cnipdb_ip2location",
+        "outputName": "geoip.dat",
+        "wantedList": [
+          "cnipdb_ip2location",
+          "cnipdb_ip2location_asn"
+        ]
+      },
+      "type": "v2rayGeoIPDat"
+    },
+    {
+      "action": "output",
+      "args": {
+        "outputDir": "../cnipdb_ip2location",
+        "outputName": "Country.mmdb",
+        "wantedList": [
+          "cnipdb_ip2location",
+          "cnipdb_ip2location_asn"
+        ]
+      },
+      "type": "maxmindMMDB"
+    },
+    {
+      "action": "output",
+      "args": {
+        "outputDir": "../cnipdb_ipdeny",
+        "outputName": "geoip.dat",
+        "wantedList": [
+          "cnipdb_ipdeny"
+        ]
+      },
+      "type": "v2rayGeoIPDat"
+    },
+    {
+      "action": "output",
+      "args": {
+        "outputDir": "../cnipdb_ipdeny",
+        "outputName": "Country.mmdb",
+        "wantedList": [
+          "cnipdb_ipdeny"
+        ]
+      },
+      "type": "maxmindMMDB"
+    },
+    {
+      "action": "output",
+      "args": {
+        "outputDir": "../cnipdb_ipipdotnet",
+        "outputName": "geoip.dat",
+        "wantedList": [
+          "cnipdb_ipipdotnet"
+        ]
+      },
+      "type": "v2rayGeoIPDat"
+    },
+    {
+      "action": "output",
+      "args": {
+        "outputDir": "../cnipdb_ipipdotnet",
+        "outputName": "Country.mmdb",
+        "wantedList": [
+          "cnipdb_ipipdotnet"
+        ]
+      },
+      "type": "maxmindMMDB"
+    },
+    {
+      "action": "output",
+      "args": {
+        "outputDir": "../cnipdb_iptoasn",
+        "outputName": "geoip.dat",
+        "wantedList": [
+          "cnipdb_iptoasn",
+          "cnipdb_iptoasn_asn"
+        ]
+      },
+      "type": "v2rayGeoIPDat"
+    },
+    {
+      "action": "output",
+      "args": {
+        "outputDir": "../cnipdb_iptoasn",
+        "outputName": "Country.mmdb",
+        "wantedList": [
+          "cnipdb_iptoasn",
+          "cnipdb_iptoasn_asn"
+        ]
+      },
+      "type": "maxmindMMDB"
+    },
+    {
+      "action": "output",
+      "args": {
+        "outputDir": "../cnipdb_vxlink",
+        "outputName": "geoip.dat",
+        "wantedList": [
+          "cnipdb_vxlink"
+        ]
+      },
+      "type": "v2rayGeoIPDat"
+    },
+    {
+      "action": "output",
+      "args": {
+        "outputDir": "../cnipdb_vxlink",
+        "outputName": "Country.mmdb",
+        "wantedList": [
+          "cnipdb_vxlink"
+        ]
+      },
+      "type": "maxmindMMDB"
     }
   ]
 }
