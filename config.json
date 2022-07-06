@@ -1,0 +1,150 @@
+{
+  "input": [
+    {
+      "action": "add",
+      "args": {
+        "name": "cnipdb",
+        "uri": "./cnipdb/country_ipv4_6.txt"
+      },
+      "type": "text"
+    },
+    {
+      "action": "add",
+      "args": {
+        "name": "cnipdb_asn",
+        "uri": "./cnipdb/asn_ipv4_6.txt"
+      },
+      "type": "text"
+    },
+    {
+      "action": "add",
+      "args": {
+        "name": "cnipdb_bgp",
+        "uri": "./cnipdb_bgp/country_ipv4_6.txt"
+      },
+      "type": "text"
+    },
+    {
+      "action": "add",
+      "args": {
+        "name": "cnipdb_cz88dotnet",
+        "uri": "./cnipdb_cz88dotnet/country_ipv4.txt"
+      },
+      "type": "text"
+    },
+    {
+      "action": "add",
+      "args": {
+        "name": "cnipdb_dbip",
+        "uri": "./cnipdb_dbip/country_ipv4_6.txt"
+      },
+      "type": "text"
+    },
+    {
+      "action": "add",
+      "args": {
+        "name": "cnipdb_dbip_asn",
+        "uri": "./cnipdb_dbip/asn_ipv4_6.txt"
+      },
+      "type": "text"
+    },
+    {
+      "action": "add",
+      "args": {
+        "name": "cnipdb_geolite2",
+        "uri": "./cnipdb_geolite2/country_ipv4_6.txt"
+      },
+      "type": "text"
+    },
+    {
+      "action": "add",
+      "args": {
+        "name": "cnipdb_geolite2_asn",
+        "uri": "./cnipdb_geolite2/asn_ipv4_6.txt"
+      },
+      "type": "text"
+    },
+    {
+      "action": "add",
+      "args": {
+        "name": "cnipdb_iana",
+        "uri": "./cnipdb_iana/country_ipv4_6.txt"
+      },
+      "type": "text"
+    },
+    {
+      "action": "add",
+      "args": {
+        "name": "cnipdb_ip2location",
+        "uri": "./cnipdb_ip2location/country_ipv4_6.txt"
+      },
+      "type": "text"
+    },
+    {
+      "action": "add",
+      "args": {
+        "name": "cnipdb_ip2location_asn",
+        "uri": "./cnipdb_ip2location/asn_ipv4_6.txt"
+      },
+      "type": "text"
+    },
+    {
+      "action": "add",
+      "args": {
+        "name": "cnipdb_ipdeny",
+        "uri": "./cnipdb_ipdeny/country_ipv4_6.txt"
+      },
+      "type": "text"
+    },
+    {
+      "action": "add",
+      "args": {
+        "name": "cnipdb_ipipdotnet",
+        "uri": "./cnipdb_ipipdotnet/country_ipv4.txt"
+      },
+      "type": "text"
+    },
+    {
+      "action": "add",
+      "args": {
+        "name": "cnipdb_iptoasn",
+        "uri": "./cnipdb_iptoasn/country_ipv4_6.txt"
+      },
+      "type": "text"
+    },
+    {
+      "action": "add",
+      "args": {
+        "name": "cnipdb_iptoasn_asn",
+        "uri": "./cnipdb_iptoasn/asn_ipv4_6.txt"
+      },
+      "type": "text"
+    },
+    {
+      "action": "add",
+      "args": {
+        "name": "cnipdb_vxlink",
+        "uri": "./cnipdb_vxlink/country_ipv4_6.txt"
+      },
+      "type": "text"
+    }
+  ],
+  "output": [
+    {
+      "action": "output",
+      "args": {
+        "outputDir": "./cnipdb",
+        "outputName": "geoip.dat"
+      },
+      "type": "v2rayGeoIPDat"
+    },
+    {
+      "action": "output",
+      "args": {
+        "outputDir": "./cnipdb",
+        "outputName": "Country.mmdb"
+      },
+      "type": "maxmindMMDB"
+    }
+  ]
+}
