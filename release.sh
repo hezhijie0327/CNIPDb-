@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.6.8
+# Current Version: 1.6.9
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -15,6 +15,8 @@ function EnvironmentPreparation() {
     apt update && apt install -qy bgpdump cargo html2text
     cargo install --vers 0.0.3 bgptools
     go get github.com/zhanhb/cidr-merger
+    go get github.com/Loyalsoldier/geoip
+    curl -s --connect-timeout 15 "https://raw.githubusercontent.com/hezhijie0327/CNIPDb/source/config.json" > "./config.json"
 }
 # Environment Cleanup
 function EnvironmentCleanup() {
@@ -24,6 +26,7 @@ function EnvironmentCleanup() {
     cat ../cnipdb_*/country_ipv4.txt | sort | uniq | cidr-merger -s > ../cnipdb/country_ipv4.txt
     cat ../cnipdb_*/country_ipv6.txt | sort | uniq | cidr-merger -s > ../cnipdb/country_ipv6.txt
     cat ../cnipdb/country_ipv4.txt ../cnipdb/country_ipv6.txt > ../cnipdb/country_ipv4_6.txt
+    geoip -c "./config.json"
     cd .. && rm -rf ./Temp
 }
 # Get Data from BGP
