@@ -134,7 +134,10 @@
       "action": "output",
       "args": {
         "outputDir": "../cnipdb",
-        "outputName": "geoip.dat"
+        "outputName": "geoip_country.dat",
+        "wantedList": [
+          "cnipdb"
+        ]
       },
       "type": "v2rayGeoIPDat"
     },
@@ -142,7 +145,32 @@
       "action": "output",
       "args": {
         "outputDir": "../cnipdb",
-        "outputName": "Country.mmdb"
+        "outputName": "maxmind_country.mmdb",
+        "wantedList": [
+          "cnipdb"
+        ]
+      },
+      "type": "maxmindMMDB"
+    },
+    {
+      "action": "output",
+      "args": {
+        "outputDir": "../cnipdb",
+        "outputName": "geoip_asn.dat",
+        "wantedList": [
+          "cnipdb_asn"
+        ]
+      },
+      "type": "v2rayGeoIPDat"
+    },
+    {
+      "action": "output",
+      "args": {
+        "outputDir": "../cnipdb",
+        "outputName": "maxmind_asn.mmdb",
+        "wantedList": [
+          "cnipdb_asn"
+        ]
       },
       "type": "maxmindMMDB"
     },
@@ -150,7 +178,7 @@
       "action": "output",
       "args": {
         "outputDir": "../cnipdb_bgp",
-        "outputName": "geoip.dat",
+        "outputName": "geoip_country.dat",
         "wantedList": [
           "cnipdb_bgp"
         ]
@@ -161,7 +189,7 @@
       "action": "output",
       "args": {
         "outputDir": "../cnipdb_bgp",
-        "outputName": "Country.mmdb",
+        "outputName": "maxmind_country.mmdb",
         "wantedList": [
           "cnipdb_bgp"
         ]
@@ -172,7 +200,7 @@
       "action": "output",
       "args": {
         "outputDir": "../cnipdb_cz88dotnet",
-        "outputName": "geoip.dat",
+        "outputName": "geoip_country.dat",
         "wantedList": [
           "cnipdb_cz88dotnet"
         ]
@@ -183,7 +211,7 @@
       "action": "output",
       "args": {
         "outputDir": "../cnipdb_cz88dotnet",
-        "outputName": "Country.mmdb",
+        "outputName": "maxmind_country.mmdb",
         "wantedList": [
           "cnipdb_cz88dotnet"
         ]
@@ -194,9 +222,30 @@
       "action": "output",
       "args": {
         "outputDir": "../cnipdb_dbip",
-        "outputName": "geoip.dat",
+        "outputName": "geoip_country.dat",
         "wantedList": [
-          "cnipdb_dbip",
+          "cnipdb_dbip"
+        ]
+      },
+      "type": "v2rayGeoIPDat"
+    },
+    {
+      "action": "output",
+      "args": {
+        "outputDir": "../cnipdb_dbip",
+        "outputName": "maxmind_country.mmdb",
+        "wantedList": [
+          "cnipdb_dbip"
+        ]
+      },
+      "type": "maxmindMMDB"
+    },
+    {
+      "action": "output",
+      "args": {
+        "outputDir": "../cnipdb_dbip",
+        "outputName": "geoip_asn.dat",
+        "wantedList": [
           "cnipdb_dbip_asn"
         ]
       },
@@ -206,9 +255,8 @@
       "action": "output",
       "args": {
         "outputDir": "../cnipdb_dbip",
-        "outputName": "Country.mmdb",
+        "outputName": "maxmind_asn.mmdb",
         "wantedList": [
-          "cnipdb_dbip",
           "cnipdb_dbip_asn"
         ]
       },
@@ -218,9 +266,30 @@
       "action": "output",
       "args": {
         "outputDir": "../cnipdb_geolite2",
-        "outputName": "geoip.dat",
+        "outputName": "geoip_country.dat",
         "wantedList": [
-          "cnipdb_geolite2",
+          "cnipdb_geolite2"
+        ]
+      },
+      "type": "v2rayGeoIPDat"
+    },
+    {
+      "action": "output",
+      "args": {
+        "outputDir": "../cnipdb_geolite2",
+        "outputName": "maxmind_country.mmdb",
+        "wantedList": [
+          "cnipdb_geolite2"
+        ]
+      },
+      "type": "maxmindMMDB"
+    },
+    {
+      "action": "output",
+      "args": {
+        "outputDir": "../cnipdb_geolite2",
+        "outputName": "geoip_asn.dat",
+        "wantedList": [
           "cnipdb_geolite2_asn"
         ]
       },
@@ -230,9 +299,8 @@
       "action": "output",
       "args": {
         "outputDir": "../cnipdb_geolite2",
-        "outputName": "Country.mmdb",
+        "outputName": "maxmind_asn.mmdb",
         "wantedList": [
-          "cnipdb_geolite2",
           "cnipdb_geolite2_asn"
         ]
       },
@@ -242,7 +310,7 @@
       "action": "output",
       "args": {
         "outputDir": "../cnipdb_iana",
-        "outputName": "geoip.dat",
+        "outputName": "geoip_country.dat",
         "wantedList": [
           "cnipdb_iana"
         ]
@@ -253,7 +321,7 @@
       "action": "output",
       "args": {
         "outputDir": "../cnipdb_iana",
-        "outputName": "Country.mmdb",
+        "outputName": "maxmind_country.mmdb",
         "wantedList": [
           "cnipdb_iana"
         ]
@@ -264,9 +332,30 @@
       "action": "output",
       "args": {
         "outputDir": "../cnipdb_ip2location",
-        "outputName": "geoip.dat",
+        "outputName": "geoip_country.dat",
         "wantedList": [
-          "cnipdb_ip2location",
+          "cnipdb_ip2location"
+        ]
+      },
+      "type": "v2rayGeoIPDat"
+    },
+    {
+      "action": "output",
+      "args": {
+        "outputDir": "../cnipdb_ip2location",
+        "outputName": "maxmind_country.mmdb",
+        "wantedList": [
+          "cnipdb_ip2location"
+        ]
+      },
+      "type": "maxmindMMDB"
+    },
+    {
+      "action": "output",
+      "args": {
+        "outputDir": "../cnipdb_ip2location",
+        "outputName": "geoip_asn.dat",
+        "wantedList": [
           "cnipdb_ip2location_asn"
         ]
       },
@@ -276,9 +365,8 @@
       "action": "output",
       "args": {
         "outputDir": "../cnipdb_ip2location",
-        "outputName": "Country.mmdb",
+        "outputName": "maxmind_asn.mmdb",
         "wantedList": [
-          "cnipdb_ip2location",
           "cnipdb_ip2location_asn"
         ]
       },
@@ -288,7 +376,7 @@
       "action": "output",
       "args": {
         "outputDir": "../cnipdb_ipdeny",
-        "outputName": "geoip.dat",
+        "outputName": "geoip_country.dat",
         "wantedList": [
           "cnipdb_ipdeny"
         ]
@@ -299,7 +387,7 @@
       "action": "output",
       "args": {
         "outputDir": "../cnipdb_ipdeny",
-        "outputName": "Country.mmdb",
+        "outputName": "maxmind_country.mmdb",
         "wantedList": [
           "cnipdb_ipdeny"
         ]
@@ -310,7 +398,7 @@
       "action": "output",
       "args": {
         "outputDir": "../cnipdb_ipipdotnet",
-        "outputName": "geoip.dat",
+        "outputName": "geoip_country.dat",
         "wantedList": [
           "cnipdb_ipipdotnet"
         ]
@@ -321,7 +409,7 @@
       "action": "output",
       "args": {
         "outputDir": "../cnipdb_ipipdotnet",
-        "outputName": "Country.mmdb",
+        "outputName": "maxmind_country.mmdb",
         "wantedList": [
           "cnipdb_ipipdotnet"
         ]
@@ -332,9 +420,30 @@
       "action": "output",
       "args": {
         "outputDir": "../cnipdb_iptoasn",
-        "outputName": "geoip.dat",
+        "outputName": "geoip_country.dat",
         "wantedList": [
-          "cnipdb_iptoasn",
+          "cnipdb_iptoasn"
+        ]
+      },
+      "type": "v2rayGeoIPDat"
+    },
+    {
+      "action": "output",
+      "args": {
+        "outputDir": "../cnipdb_iptoasn",
+        "outputName": "maxmind_country.mmdb",
+        "wantedList": [
+          "cnipdb_iptoasn"
+        ]
+      },
+      "type": "maxmindMMDB"
+    },
+    {
+      "action": "output",
+      "args": {
+        "outputDir": "../cnipdb_iptoasn",
+        "outputName": "geoip_asn.dat",
+        "wantedList": [
           "cnipdb_iptoasn_asn"
         ]
       },
@@ -344,9 +453,8 @@
       "action": "output",
       "args": {
         "outputDir": "../cnipdb_iptoasn",
-        "outputName": "Country.mmdb",
+        "outputName": "maxmind_asn.mmdb",
         "wantedList": [
-          "cnipdb_iptoasn",
           "cnipdb_iptoasn_asn"
         ]
       },
@@ -356,7 +464,7 @@
       "action": "output",
       "args": {
         "outputDir": "../cnipdb_vxlink",
-        "outputName": "geoip.dat",
+        "outputName": "geoip_country.dat",
         "wantedList": [
           "cnipdb_vxlink"
         ]
@@ -367,7 +475,7 @@
       "action": "output",
       "args": {
         "outputDir": "../cnipdb_vxlink",
-        "outputName": "Country.mmdb",
+        "outputName": "maxmind_country.mmdb",
         "wantedList": [
           "cnipdb_vxlink"
         ]
