@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.7.1
+# Current Version: 1.7.2
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -31,10 +31,10 @@ function GetDataFromBGP() {
         "https://raw.githubusercontent.com/misakaio/chnroutes2/master/chnroutes.txt"
     )
     for bgp_url_task in "${!bgp_url[@]}"; do
-        curl -s --connect-timeout 15 "${bgp_url[$bgp_url_task]}" >> ./bgp_url.tmp
+        curl -s --connect-timeout 15 "${bgp_url[$bgp_url_task]}" >> ./bgp_country_ipv4_6.tmp
     done
-    bgp_country_ipv4_data=($(cat ./bgp_url.tmp | grep -v "\:\|\#" | grep '.' | sort | uniq | awk "{ print $2 }"))
-    bgp_country_ipv6_data=($(cat ./bgp_url.tmp | grep -v "\.\|\#" | grep ':' | sort | uniq | awk "{ print $2 }"))
+    bgp_country_ipv4_data=($(cat ./bgp_country_ipv4_6.tmp | grep -v "\:\|\#" | grep '.' | sort | uniq | awk "{ print $2 }"))
+    bgp_country_ipv6_data=($(cat ./bgp_country_ipv4_6.tmp | grep -v "\.\|\#" | grep ':' | sort | uniq | awk "{ print $2 }"))
     for bgp_country_ipv4_data_task in "${!bgp_country_ipv4_data[@]}"; do
         echo "${bgp_country_ipv4_data[$bgp_country_ipv4_data_task]}" >> ./bgp_country_ipv4.tmp
     done
@@ -45,6 +45,21 @@ function GetDataFromBGP() {
     cat ./bgp_country_ipv4.tmp | sort | uniq | cidr-merger -s > ../cnipdb_bgp/country_ipv4.txt
     cat ./bgp_country_ipv6.tmp | sort | uniq | cidr-merger -s > ../cnipdb_bgp/country_ipv6.txt
     cat ../cnipdb_bgp/country_ipv4.txt ../cnipdb_bgp/country_ipv6.txt > ../cnipdb_bgp/country_ipv4_6.txt
+}
+# Get Data from BTPanel
+function GetDataFromBTPanel() {
+    btpanel_url=(
+        "https://download.bt.cn/cnlist.json"
+    )
+    for btpanel_url_task in "${!btpanel_url[@]}"; do
+        curl -s --connect-timeout 15 "${btpanel_url[$btpanel_url_task]}" >> ./btpanel_country_ipv4_6.tmp
+    done
+    btpanel_country_ipv4_data=($(cat ./btpanel_country_ipv4_6.tmp | sed 's/]], /\n/g' | sed "s/\], \[/-/g" | tr -d '[ ]' | sed 's/,/./g' | sort | uniq | awk "{ print $2 }"))
+    for btpanel_country_ipv4_data_task in "${!btpanel_country_ipv4_data[@]}"; do
+        echo "${btpanel_country_ipv4_data[$btpanel_country_ipv4_data_task]}" >> ./btpanel_country_ipv4.tmp
+    done
+    mkdir ../cnipdb_btpanel
+    cat ./btpanel_country_ipv4.tmp | sort | uniq | cidr-merger -s > ../cnipdb_btpanel/country_ipv4.txt
 }
 # Get Data from CZ88dotnet
 function GetDataFromCZ88dotnet() {
@@ -271,6 +286,8 @@ function GetDataFromVXLINK() {
 EnvironmentPreparation
 # Call GetDataFromBGP
 GetDataFromBGP
+# Call GetDataFromBTPanel
+GetDataFromBTPanel
 # Call GetDataFromCZ88dotnet
 GetDataFromCZ88dotnet
 # Call GetDataFromDBIP
