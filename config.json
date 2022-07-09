@@ -11,14 +11,6 @@
     {
       "action": "add",
       "args": {
-        "name": "cnipdb_asn",
-        "uri": "../cnipdb/asn_ipv4_6.txt"
-      },
-      "type": "text"
-    },
-    {
-      "action": "add",
-      "args": {
         "name": "cnipdb_bgp",
         "uri": "../cnipdb_bgp/country_ipv4_6.txt"
       },
@@ -43,24 +35,8 @@
     {
       "action": "add",
       "args": {
-        "name": "cnipdb_dbip_asn",
-        "uri": "../cnipdb_dbip/asn_ipv4_6.txt"
-      },
-      "type": "text"
-    },
-    {
-      "action": "add",
-      "args": {
         "name": "cnipdb_geolite2",
         "uri": "../cnipdb_geolite2/country_ipv4_6.txt"
-      },
-      "type": "text"
-    },
-    {
-      "action": "add",
-      "args": {
-        "name": "cnipdb_geolite2_asn",
-        "uri": "../cnipdb_geolite2/asn_ipv4_6.txt"
       },
       "type": "text"
     },
@@ -77,14 +53,6 @@
       "args": {
         "name": "cnipdb_ip2location",
         "uri": "../cnipdb_ip2location/country_ipv4_6.txt"
-      },
-      "type": "text"
-    },
-    {
-      "action": "add",
-      "args": {
-        "name": "cnipdb_ip2location_asn",
-        "uri": "../cnipdb_ip2location/asn_ipv4_6.txt"
       },
       "type": "text"
     },
@@ -109,14 +77,6 @@
       "args": {
         "name": "cnipdb_iptoasn",
         "uri": "../cnipdb_iptoasn/country_ipv4_6.txt"
-      },
-      "type": "text"
-    },
-    {
-      "action": "add",
-      "args": {
-        "name": "cnipdb_iptoasn_asn",
-        "uri": "../cnipdb_iptoasn/asn_ipv4_6.txt"
       },
       "type": "text"
     },
@@ -203,76 +163,6 @@
     {
       "action": "output",
       "args": {
-        "outputDir": "../cnipdb",
-        "outputName": "asn_ipv4_6.dat",
-        "wantedList": [
-          "cnipdb_asn"
-        ]
-      },
-      "type": "v2rayGeoIPDat"
-    },
-    {
-      "action": "output",
-      "args": {
-        "onlyIPType": "ipv4",
-        "outputDir": "../cnipdb",
-        "outputName": "asn_ipv4.dat",
-        "wantedList": [
-          "cnipdb_asn"
-        ]
-      },
-      "type": "v2rayGeoIPDat"
-    },
-    {
-      "action": "output",
-      "args": {
-        "onlyIPType": "ipv6",
-        "outputDir": "../cnipdb",
-        "outputName": "asn_ipv6.dat",
-        "wantedList": [
-          "cnipdb_asn"
-        ]
-      },
-      "type": "v2rayGeoIPDat"
-    },
-    {
-      "action": "output",
-      "args": {
-        "outputDir": "../cnipdb",
-        "outputName": "asn_ipv4_6.mmdb",
-        "wantedList": [
-          "cnipdb_asn"
-        ]
-      },
-      "type": "maxmindMMDB"
-    },
-    {
-      "action": "output",
-      "args": {
-        "onlyIPType": "ipv4",
-        "outputDir": "../cnipdb",
-        "outputName": "asn_ipv4.mmdb",
-        "wantedList": [
-          "cnipdb_asn"
-        ]
-      },
-      "type": "maxmindMMDB"
-    },
-    {
-      "action": "output",
-      "args": {
-        "onlyIPType": "ipv6",
-        "outputDir": "../cnipdb",
-        "outputName": "asn_ipv6.mmdb",
-        "wantedList": [
-          "cnipdb_asn"
-        ]
-      },
-      "type": "maxmindMMDB"
-    },
-    {
-      "action": "output",
-      "args": {
         "outputDir": "../cnipdb_bgp",
         "outputName": "country_ipv4_6.dat",
         "wantedList": [
@@ -437,76 +327,6 @@
     {
       "action": "output",
       "args": {
-        "outputDir": "../cnipdb_dbip",
-        "outputName": "asn_ipv4_6.dat",
-        "wantedList": [
-          "cnipdb_dbip_asn"
-        ]
-      },
-      "type": "v2rayGeoIPDat"
-    },
-    {
-      "action": "output",
-      "args": {
-        "onlyIPType": "ipv4",
-        "outputDir": "../cnipdb_dbip",
-        "outputName": "asn_ipv4.dat",
-        "wantedList": [
-          "cnipdb_dbip_asn"
-        ]
-      },
-      "type": "v2rayGeoIPDat"
-    },
-    {
-      "action": "output",
-      "args": {
-        "onlyIPType": "ipv6",
-        "outputDir": "../cnipdb_dbip",
-        "outputName": "asn_ipv6.dat",
-        "wantedList": [
-          "cnipdb_dbip_asn"
-        ]
-      },
-      "type": "v2rayGeoIPDat"
-    },
-    {
-      "action": "output",
-      "args": {
-        "outputDir": "../cnipdb_dbip",
-        "outputName": "asn_ipv4_6.mmdb",
-        "wantedList": [
-          "cnipdb_dbip_asn"
-        ]
-      },
-      "type": "maxmindMMDB"
-    },
-    {
-      "action": "output",
-      "args": {
-        "onlyIPType": "ipv4",
-        "outputDir": "../cnipdb_dbip",
-        "outputName": "asn_ipv4.mmdb",
-        "wantedList": [
-          "cnipdb_dbip_asn"
-        ]
-      },
-      "type": "maxmindMMDB"
-    },
-    {
-      "action": "output",
-      "args": {
-        "onlyIPType": "ipv6",
-        "outputDir": "../cnipdb_dbip",
-        "outputName": "asn_ipv6.mmdb",
-        "wantedList": [
-          "cnipdb_dbip_asn"
-        ]
-      },
-      "type": "maxmindMMDB"
-    },
-    {
-      "action": "output",
-      "args": {
         "outputDir": "../cnipdb_geolite2",
         "outputName": "country_ipv4_6.dat",
         "wantedList": [
@@ -570,76 +390,6 @@
         "outputName": "country_ipv6.mmdb",
         "wantedList": [
           "cnipdb_geolite2"
-        ]
-      },
-      "type": "maxmindMMDB"
-    },
-    {
-      "action": "output",
-      "args": {
-        "outputDir": "../cnipdb_geolite2",
-        "outputName": "asn_ipv4_6.dat",
-        "wantedList": [
-          "cnipdb_geolite2_asn"
-        ]
-      },
-      "type": "v2rayGeoIPDat"
-    },
-    {
-      "action": "output",
-      "args": {
-        "onlyIPType": "ipv4",
-        "outputDir": "../cnipdb_geolite2",
-        "outputName": "asn_ipv4.dat",
-        "wantedList": [
-          "cnipdb_geolite2_asn"
-        ]
-      },
-      "type": "v2rayGeoIPDat"
-    },
-    {
-      "action": "output",
-      "args": {
-        "onlyIPType": "ipv6",
-        "outputDir": "../cnipdb_geolite2",
-        "outputName": "asn_ipv6.dat",
-        "wantedList": [
-          "cnipdb_geolite2_asn"
-        ]
-      },
-      "type": "v2rayGeoIPDat"
-    },
-    {
-      "action": "output",
-      "args": {
-        "outputDir": "../cnipdb_geolite2",
-        "outputName": "asn_ipv4_6.mmdb",
-        "wantedList": [
-          "cnipdb_geolite2_asn"
-        ]
-      },
-      "type": "maxmindMMDB"
-    },
-    {
-      "action": "output",
-      "args": {
-        "onlyIPType": "ipv4",
-        "outputDir": "../cnipdb_geolite2",
-        "outputName": "asn_ipv4.mmdb",
-        "wantedList": [
-          "cnipdb_geolite2_asn"
-        ]
-      },
-      "type": "maxmindMMDB"
-    },
-    {
-      "action": "output",
-      "args": {
-        "onlyIPType": "ipv6",
-        "outputDir": "../cnipdb_geolite2",
-        "outputName": "asn_ipv6.mmdb",
-        "wantedList": [
-          "cnipdb_geolite2_asn"
         ]
       },
       "type": "maxmindMMDB"
@@ -780,76 +530,6 @@
         "outputName": "country_ipv6.mmdb",
         "wantedList": [
           "cnipdb_ip2location"
-        ]
-      },
-      "type": "maxmindMMDB"
-    },
-    {
-      "action": "output",
-      "args": {
-        "outputDir": "../cnipdb_ip2location",
-        "outputName": "asn_ipv4_6.dat",
-        "wantedList": [
-          "cnipdb_ip2location_asn"
-        ]
-      },
-      "type": "v2rayGeoIPDat"
-    },
-    {
-      "action": "output",
-      "args": {
-        "onlyIPType": "ipv4",
-        "outputDir": "../cnipdb_ip2location",
-        "outputName": "asn_ipv4.dat",
-        "wantedList": [
-          "cnipdb_ip2location_asn"
-        ]
-      },
-      "type": "v2rayGeoIPDat"
-    },
-    {
-      "action": "output",
-      "args": {
-        "onlyIPType": "ipv6",
-        "outputDir": "../cnipdb_ip2location",
-        "outputName": "asn_ipv6.dat",
-        "wantedList": [
-          "cnipdb_ip2location_asn"
-        ]
-      },
-      "type": "v2rayGeoIPDat"
-    },
-    {
-      "action": "output",
-      "args": {
-        "outputDir": "../cnipdb_ip2location",
-        "outputName": "asn_ipv4_6.mmdb",
-        "wantedList": [
-          "cnipdb_ip2location_asn"
-        ]
-      },
-      "type": "maxmindMMDB"
-    },
-    {
-      "action": "output",
-      "args": {
-        "onlyIPType": "ipv4",
-        "outputDir": "../cnipdb_ip2location",
-        "outputName": "asn_ipv4.mmdb",
-        "wantedList": [
-          "cnipdb_ip2location_asn"
-        ]
-      },
-      "type": "maxmindMMDB"
-    },
-    {
-      "action": "output",
-      "args": {
-        "onlyIPType": "ipv6",
-        "outputDir": "../cnipdb_ip2location",
-        "outputName": "asn_ipv6.mmdb",
-        "wantedList": [
-          "cnipdb_ip2location_asn"
         ]
       },
       "type": "maxmindMMDB"
@@ -1014,76 +694,6 @@
         "outputName": "country_ipv6.mmdb",
         "wantedList": [
           "cnipdb_iptoasn"
-        ]
-      },
-      "type": "maxmindMMDB"
-    },
-    {
-      "action": "output",
-      "args": {
-        "outputDir": "../cnipdb_iptoasn",
-        "outputName": "asn_ipv4_6.dat",
-        "wantedList": [
-          "cnipdb_iptoasn_asn"
-        ]
-      },
-      "type": "v2rayGeoIPDat"
-    },
-    {
-      "action": "output",
-      "args": {
-        "onlyIPType": "ipv4",
-        "outputDir": "../cnipdb_iptoasn",
-        "outputName": "asn_ipv4.dat",
-        "wantedList": [
-          "cnipdb_iptoasn_asn"
-        ]
-      },
-      "type": "v2rayGeoIPDat"
-    },
-    {
-      "action": "output",
-      "args": {
-        "onlyIPType": "ipv6",
-        "outputDir": "../cnipdb_iptoasn",
-        "outputName": "asn_ipv6.dat",
-        "wantedList": [
-          "cnipdb_iptoasn_asn"
-        ]
-      },
-      "type": "v2rayGeoIPDat"
-    },
-    {
-      "action": "output",
-      "args": {
-        "outputDir": "../cnipdb_iptoasn",
-        "outputName": "asn_ipv4_6.mmdb",
-        "wantedList": [
-          "cnipdb_iptoasn_asn"
-        ]
-      },
-      "type": "maxmindMMDB"
-    },
-    {
-      "action": "output",
-      "args": {
-        "onlyIPType": "ipv4",
-        "outputDir": "../cnipdb_iptoasn",
-        "outputName": "asn_ipv4.mmdb",
-        "wantedList": [
-          "cnipdb_iptoasn_asn"
-        ]
-      },
-      "type": "maxmindMMDB"
-    },
-    {
-      "action": "output",
-      "args": {
-        "onlyIPType": "ipv6",
-        "outputDir": "../cnipdb_iptoasn",
-        "outputName": "asn_ipv6.mmdb",
-        "wantedList": [
-          "cnipdb_iptoasn_asn"
         ]
       },
       "type": "maxmindMMDB"
