@@ -19,6 +19,14 @@
     {
       "action": "add",
       "args": {
+        "name": "btpanel",
+        "uri": "../cnipdb_btpanel/country_ipv4.txt"
+      },
+      "type": "text"
+    },
+    {
+      "action": "add",
+      "args": {
         "name": "cz88dotnet",
         "uri": "../cnipdb_cz88dotnet/country_ipv4.txt"
       },
@@ -226,6 +234,30 @@
         "outputName": "country_ipv6.mmdb",
         "wantedList": [
           "bgp"
+        ]
+      },
+      "type": "maxmindMMDB"
+    },
+    {
+      "action": "output",
+      "args": {
+        "onlyIPType": "ipv4",
+        "outputDir": "../cnipdb_btpanel",
+        "outputName": "country_ipv4.dat",
+        "wantedList": [
+          "btpanel"
+        ]
+      },
+      "type": "v2rayGeoIPDat"
+    },
+    {
+      "action": "output",
+      "args": {
+        "onlyIPType": "ipv4",
+        "outputDir": "../cnipdb_btpanel",
+        "outputName": "country_ipv4.mmdb",
+        "wantedList": [
+          "btpanel"
         ]
       },
       "type": "maxmindMMDB"
