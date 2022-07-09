@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.7.0
+# Current Version: 1.7.1
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -8,7 +8,6 @@
 ## Function
 # Environment Preparation
 function EnvironmentPreparation() {
-    export ASN_CN_GREP="AFRICA\|ALTYN\|AMERICAS\|ASIA\|BRASIL\|CHINACAM\|CHINACHEN\|CHINAE\|CHINATRUST\|EUROPE\|GALICHINA\|GLOBAL\|H\.K\.\|HK\|HONGKONG\|HONG\ KONG\|INTERNATIONAL\|SINGAPORE\|SOUTH\ CHINA\ MORNING\ POST\ PUBLISHERS\ LIMITED\|TELEKACHINA"
     export DEBIAN_FRONTEND="noninteractive"
     export PATH="/root/.cargo/bin:/root/go/bin:$PATH"
     rm -rf ./Temp ./cnipdb ./cnipdb_* && mkdir ./Temp ./cnipdb && cd ./Temp
@@ -18,9 +17,6 @@ function EnvironmentPreparation() {
 }
 # Environment Cleanup
 function EnvironmentCleanup() {
-    cat ../cnipdb_*/asn_ipv4.txt | sort | uniq | cidr-merger -s > ../cnipdb/asn_ipv4.txt
-    cat ../cnipdb_*/asn_ipv6.txt | sort | uniq | cidr-merger -s > ../cnipdb/asn_ipv6.txt
-    cat ../cnipdb/asn_ipv4.txt ../cnipdb/asn_ipv6.txt > ../cnipdb/asn_ipv4_6.txt
     cat ../cnipdb_*/country_ipv4.txt | sort | uniq | cidr-merger -s > ../cnipdb/country_ipv4.txt
     cat ../cnipdb_*/country_ipv6.txt | sort | uniq | cidr-merger -s > ../cnipdb/country_ipv6.txt
     cat ../cnipdb/country_ipv4.txt ../cnipdb/country_ipv6.txt > ../cnipdb/country_ipv4_6.txt
@@ -68,23 +64,14 @@ function GetDataFromCZ88dotnet() {
 # Get Data from DBIP
 function GetDataFromDBIP() {
     dbip_url=(
-        "https://download.db-ip.com/free/dbip-asn-lite-$(date '+%Y-%m').csv.gz"
         "https://download.db-ip.com/free/dbip-country-lite-$(date '+%Y-%m').csv.gz"
     )
     for dbip_url_task in "${!dbip_url[@]}"; do
         curl -s --connect-timeout 15 "${dbip_url[$dbip_url_task]}" >> ./dbip_${dbip_url_task}.csv.gz
         gzip -d ./dbip_${dbip_url_task}.csv.gz && mv ./dbip_${dbip_url_task}.csv ./$(echo ${dbip_url[$dbip_url_task]} | cut -d '/' -f 5 | cut -d '.' -f 1,2)
     done
-    dbip_asn_ipv4_data=($(cat ./dbip-asn-lite-$(date '+%Y-%m').csv | tr 'a-z' 'A-Z' | grep "CHINA\|CNNIC" | grep -v "${ASN_CN_GREP}" | cut -d ',' -f 1,2 | tr ',' '-' | grep -v ':' | sort | uniq | awk "{ print $2 }"))
-    dbip_asn_ipv6_data=($(cat ./dbip-asn-lite-$(date '+%Y-%m').csv | tr 'a-z' 'A-Z' | grep "CHINA\|CNNIC" | grep -v "${ASN_CN_GREP}" | cut -d ',' -f 1,2 | tr ',' '-' | grep ':' | sort | uniq | awk "{ print $2 }"))
     dbip_country_ipv4_data=($(cat ./dbip-country-lite-$(date '+%Y-%m').csv | grep 'CN' | cut -d ',' -f 1,2 | tr ',' '-' | grep -v ':' | sort | uniq | awk "{ print $2 }"))
     dbip_country_ipv6_data=($(cat ./dbip-country-lite-$(date '+%Y-%m').csv | grep 'CN' | cut -d ',' -f 1,2 | tr ',' '-' | grep ':' | sort | uniq | awk "{ print $2 }"))
-    for dbip_asn_ipv4_data_task in "${!dbip_asn_ipv4_data[@]}"; do
-        echo "${dbip_asn_ipv4_data[$dbip_asn_ipv4_data_task]}" >> ./dbip_asn_ipv4.tmp
-    done
-    for dbip_asn_ipv6_data_task in "${!dbip_asn_ipv6_data[@]}"; do
-        echo "${dbip_asn_ipv6_data[$dbip_asn_ipv6_data_task]}" >> ./dbip_asn_ipv6.tmp
-    done
     for dbip_country_ipv4_data_task in "${!dbip_country_ipv4_data[@]}"; do
         echo "${dbip_country_ipv4_data[$dbip_country_ipv4_data_task]}" >> ./dbip_country_ipv4.tmp
     done
@@ -92,9 +79,6 @@ function GetDataFromDBIP() {
         echo "${dbip_country_ipv6_data[$dbip_country_ipv6_data_task]}" >> ./dbip_country_ipv6.tmp
     done
     mkdir ../cnipdb_dbip
-    cat ./dbip_asn_ipv4.tmp | sort | uniq | cidr-merger -s > ../cnipdb_dbip/asn_ipv4.txt
-    cat ./dbip_asn_ipv6.tmp | sort | uniq | cidr-merger -s > ../cnipdb_dbip/asn_ipv6.txt
-    cat ../cnipdb_dbip/asn_ipv4.txt ../cnipdb_dbip/asn_ipv6.txt > ../cnipdb_dbip/asn_ipv4_6.txt
     cat ./dbip_country_ipv4.tmp | sort | uniq | cidr-merger -s > ../cnipdb_dbip/country_ipv4.txt
     cat ./dbip_country_ipv6.tmp | sort | uniq | cidr-merger -s > ../cnipdb_dbip/country_ipv6.txt
     cat ../cnipdb_dbip/country_ipv4.txt ../cnipdb_dbip/country_ipv6.txt > ../cnipdb_dbip/country_ipv4_6.txt
@@ -102,23 +86,14 @@ function GetDataFromDBIP() {
 # Get Data from GeoLite2
 function GetDataFromGeoLite2() {
     geolite2_url=(
-        "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-ASN-CSV&license_key={GEOLITE2_TOKEN}&suffix=zip"
         "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-Country-CSV&license_key={GEOLITE2_TOKEN}&suffix=zip"
     )
     for geolite2_url_task in "${!geolite2_url[@]}"; do
         curl -s --connect-timeout 15 "${geolite2_url[$geolite2_url_task]}" >> ./geolite2_${geolite2_url_task}.zip
         unzip -o -d . ./geolite2_${geolite2_url_task}.zip && rm -rf ./geolite2_${geolite2_url_task}.zip
     done
-    geolite2_asn_ipv4_data=($(cat ./GeoLite2-ASN-CSV_*/GeoLite2-ASN-Blocks-IPv4.csv | tr 'a-z' 'A-Z' | grep "CHINA\|CNNIC" | grep -v "${ASN_CN_GREP}" | cut -d ',' -f 1 | sort | uniq | awk "{ print $2 }"))
-    geolite2_asn_ipv6_data=($(cat ./GeoLite2-ASN-CSV_*/GeoLite2-ASN-Blocks-IPv6.csv | tr 'a-z' 'A-Z' | grep "CHINA\|CNNIC" | grep -v "${ASN_CN_GREP}" | cut -d ',' -f 1 | sort | uniq | awk "{ print $2 }"))
     geolite2_country_ipv4_data=($(cat ./GeoLite2-Country-CSV_*/GeoLite2-Country-Blocks-IPv4.csv | grep '1814991,1814991' | cut -d ',' -f 1 | sort | uniq | awk "{ print $2 }"))
     geolite2_country_ipv6_data=($(cat ./GeoLite2-Country-CSV_*/GeoLite2-Country-Blocks-IPv6.csv | grep '1814991,1814991' | cut -d ',' -f 1 | sort | uniq | awk "{ print $2 }"))
-    for geolite2_asn_ipv4_data_task in "${!geolite2_asn_ipv4_data[@]}"; do
-        echo "${geolite2_asn_ipv4_data[$geolite2_asn_ipv4_data_task]}" >> ./geolite2_asn_ipv4.tmp
-    done
-    for geolite2_asn_ipv6_data_task in "${!geolite2_asn_ipv6_data[@]}"; do
-        echo "${geolite2_asn_ipv6_data[$geolite2_asn_ipv6_data_task]}" >> ./geolite2_asn_ipv6.tmp
-    done
     for geolite2_country_ipv4_data_task in "${!geolite2_country_ipv4_data[@]}"; do
         echo "${geolite2_country_ipv4_data[$geolite2_country_ipv4_data_task]}" >> ./geolite2_country_ipv4.tmp
     done
@@ -126,9 +101,6 @@ function GetDataFromGeoLite2() {
         echo "${geolite2_country_ipv6_data[$geolite2_country_ipv6_data_task]}" >> ./geolite2_country_ipv6.tmp
     done
     mkdir ../cnipdb_geolite2
-    cat ./geolite2_asn_ipv4.tmp | sort | uniq | cidr-merger -s > ../cnipdb_geolite2/asn_ipv4.txt
-    cat ./geolite2_asn_ipv6.tmp | sort | uniq | cidr-merger -s > ../cnipdb_geolite2/asn_ipv6.txt
-    cat ../cnipdb_geolite2/asn_ipv4.txt ../cnipdb_geolite2/asn_ipv6.txt > ../cnipdb_geolite2/asn_ipv4_6.txt
     cat ./geolite2_country_ipv4.tmp | sort | uniq | cidr-merger -s > ../cnipdb_geolite2/country_ipv4.txt
     cat ./geolite2_country_ipv6.tmp | sort | uniq | cidr-merger -s > ../cnipdb_geolite2/country_ipv6.txt
     cat ../cnipdb_geolite2/country_ipv4.txt ../cnipdb_geolite2/country_ipv6.txt > ../cnipdb_geolite2/country_ipv4_6.txt
@@ -186,8 +158,6 @@ function GetDataFromIP2Location() {
         IPv6_ADDR="$A:$B:$C:$D:$E:$F:$G:$H"
     }
     ip2location_url=(
-        "https://www.ip2location.com/download/?token={IP2LOCATION_TOKEN}&file=DBASNLITEIPV6"
-        "https://www.ip2location.com/download/?token={IP2LOCATION_TOKEN}&file=DBASNLITE"
         "https://www.ip2location.com/download/?token={IP2LOCATION_TOKEN}&file=DB1LITECSVIPV6"
         "https://www.ip2location.com/download/?token={IP2LOCATION_TOKEN}&file=DB1LITECSV"
     )
@@ -195,16 +165,8 @@ function GetDataFromIP2Location() {
         curl -s --connect-timeout 15 "${ip2location_url[$ip2location_url_task]}" >> ./ip2location_${ip2location_url_task}.zip
         unzip -o -d . ./ip2location_${ip2location_url_task}.zip && rm -rf ./ip2location_${ip2location_url_task}.zip
     done
-    ip2location_asn_ipv4_data=($(cat ./IP2LOCATION-LITE-ASN.CSV | tr 'a-z' 'A-Z' | grep "CHINA\|CNNIC" | grep -v "${ASN_CN_GREP}" | cut -d ',' -f 3 | tr -d '"' | tr ',' '-' | sort | uniq | awk "{ print $2 }"))
-    ip2location_asn_ipv6_data=($(cat ./IP2LOCATION-LITE-ASN.IPV6.CSV | tr 'a-z' 'A-Z' | grep "CHINA\|CNNIC" | grep -v "${ASN_CN_GREP}" | cut -d ',' -f 3 | tr -d '"' | tr ',' '-' | sort | uniq | awk "{ print $2 }"))
     ip2location_country_ipv4_data=($(cat ./IP2LOCATION-LITE-DB1.CSV | grep '"CN","China"' | cut -d ',' -f 1,2 | tr -d '"' | tr ',' '-' | sort | uniq | awk "{ print $2 }"))
     ip2location_country_ipv6_data=($(cat ./IP2LOCATION-LITE-DB1.IPV6.CSV | grep '"CN","China"' | cut -d ',' -f 1,2 | tr -d '"' | tr ',' '-' | sort | uniq | awk "{ print $2 }"))
-    for ip2location_asn_ipv4_data_task in "${!ip2location_asn_ipv4_data[@]}"; do
-        echo "${ip2location_asn_ipv4_data[$ip2location_asn_ipv4_data_task]}" >> ./ip2location_asn_ipv4.tmp
-    done
-    for ip2location_asn_ipv6_data_task in "${!ip2location_asn_ipv6_data[@]}"; do
-        echo "${ip2location_asn_ipv6_data[$ip2location_asn_ipv6_data_task]}" >> ./ip2location_asn_ipv6.tmp
-    done
     for ip2location_country_ipv4_data_task in "${!ip2location_country_ipv4_data[@]}"; do
         IP_NUM=$(echo "${ip2location_country_ipv4_data[$ip2location_country_ipv4_data_task]}" | cut -d '-' -f 1) && IPv4NUMConvert && IPv4_ADDR_START="${IPv4_ADDR}"
         IP_NUM=$(echo "${ip2location_country_ipv4_data[$ip2location_country_ipv4_data_task]}" | cut -d '-' -f 2) && IPv4NUMConvert && IPv4_ADDR_END="${IPv4_ADDR}"
@@ -216,9 +178,6 @@ function GetDataFromIP2Location() {
         echo "${IPv6_ADDR_START}-${IPv6_ADDR_END}" >> ./ip2location_country_ipv6.tmp
     done
     mkdir ../cnipdb_ip2location
-    cat ./ip2location_asn_ipv4.tmp | sort | uniq | cidr-merger -s > ../cnipdb_ip2location/asn_ipv4.txt
-    cat ./ip2location_asn_ipv6.tmp | sort | uniq | cidr-merger -s > ../cnipdb_ip2location/asn_ipv6.txt
-    cat ../cnipdb_ip2location/asn_ipv4.txt ../cnipdb_ip2location/asn_ipv6.txt > ../cnipdb_ip2location/asn_ipv4_6.txt
     cat ./ip2location_country_ipv4.tmp | sort | uniq | cidr-merger -s > ../cnipdb_ip2location/country_ipv4.txt
     cat ./ip2location_country_ipv6.tmp | sort | uniq | cidr-merger -s | grep -v '^::ffff:' > ../cnipdb_ip2location/country_ipv6.txt
     cat ../cnipdb_ip2location/country_ipv4.txt ../cnipdb_ip2location/country_ipv6.txt > ../cnipdb_ip2location/country_ipv4_6.txt
@@ -264,8 +223,6 @@ function GetDataFromIPIPdotNET() {
 # Get Data from IPtoASN
 function GetDataFromIPtoASN() {
     iptoasn_url=(
-        "https://iptoasn.com/data/ip2asn-v4.tsv.gz"
-        "https://iptoasn.com/data/ip2asn-v6.tsv.gz"
         "https://iptoasn.com/data/ip2country-v4.tsv.gz"
         "https://iptoasn.com/data/ip2country-v6.tsv.gz"
     )
@@ -273,16 +230,8 @@ function GetDataFromIPtoASN() {
         curl -s --connect-timeout 15 "${iptoasn_url[$iptoasn_url_task]}" >> ./iptoasn_${iptoasn_url_task}.tsv.gz
         gzip -d ./iptoasn_${iptoasn_url_task}.tsv.gz && mv ./iptoasn_${iptoasn_url_task}.tsv ./$(echo ${iptoasn_url[$iptoasn_url_task]} | cut -d '/' -f 5 | cut -d '.' -f 1,2)
     done
-    iptoasn_asn_ipv4_data=($(cat ./ip2asn-v4.tsv | grep 'CN	' | tr 'a-z' 'A-Z' | grep "CHINA\|CNNIC" | grep -v "${ASN_CN_GREP}" | cut -f 1,2 | tr '\t' '-' | sort | uniq | awk "{ print $2 }"))
-    iptoasn_asn_ipv6_data=($(cat ./ip2asn-v6.tsv | grep 'CN	' | tr 'a-z' 'A-Z' | grep "CHINA\|CNNIC" | grep -v "${ASN_CN_GREP}" | cut -f 1,2 | tr '\t' '-' | sort | uniq | awk "{ print $2 }"))
     iptoasn_country_ipv4_data=($(cat ./ip2country-v4.tsv | grep 'CN' | cut -f 1,2 | tr '\t' '-' | sort | uniq | awk "{ print $2 }"))
     iptoasn_country_ipv6_data=($(cat ./ip2country-v6.tsv | grep 'CN' | cut -f 1,2 | tr '\t' '-' | sort | uniq | awk "{ print $2 }"))
-    for iptoasn_asn_ipv4_data_task in "${!iptoasn_asn_ipv4_data[@]}"; do
-        echo "${iptoasn_asn_ipv4_data[$iptoasn_asn_ipv4_data_task]}" >> ./iptoasn_asn_ipv4.tmp
-    done
-    for iptoasn_asn_ipv6_data_task in "${!iptoasn_asn_ipv6_data[@]}"; do
-        echo "${iptoasn_asn_ipv6_data[$iptoasn_asn_ipv6_data_task]}" >> ./iptoasn_asn_ipv6.tmp
-    done
     for iptoasn_country_ipv4_data_task in "${!iptoasn_country_ipv4_data[@]}"; do
         echo "${iptoasn_country_ipv4_data[$iptoasn_country_ipv4_data_task]}" >> ./iptoasn_country_ipv4.tmp
     done
@@ -290,9 +239,6 @@ function GetDataFromIPtoASN() {
         echo "${iptoasn_country_ipv6_data[$iptoasn_country_ipv6_data_task]}" >> ./iptoasn_country_ipv6.tmp
     done
     mkdir ../cnipdb_iptoasn
-    cat ./iptoasn_asn_ipv4.tmp | sort | uniq | cidr-merger -s > ../cnipdb_iptoasn/asn_ipv4.txt
-    cat ./iptoasn_asn_ipv6.tmp | sort | uniq | cidr-merger -s > ../cnipdb_iptoasn/asn_ipv6.txt
-    cat ../cnipdb_iptoasn/asn_ipv4.txt ../cnipdb_iptoasn/asn_ipv6.txt > ../cnipdb_iptoasn/asn_ipv4_6.txt
     cat ./iptoasn_country_ipv4.tmp | sort | uniq | cidr-merger -s > ../cnipdb_iptoasn/country_ipv4.txt
     cat ./iptoasn_country_ipv6.tmp | sort | uniq | cidr-merger -s > ../cnipdb_iptoasn/country_ipv6.txt
     cat ../cnipdb_iptoasn/country_ipv4.txt ../cnipdb_iptoasn/country_ipv6.txt > ../cnipdb_iptoasn/country_ipv4_6.txt
