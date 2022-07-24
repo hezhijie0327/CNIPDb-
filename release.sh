@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.7.9
+# Current Version: 1.8.0
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -20,7 +20,7 @@ function EnvironmentCleanup() {
     cat ../cnipdb_*/country_ipv4.txt | sort | uniq | cidr-merger -s > ../cnipdb/country_ipv4.txt
     cat ../cnipdb_*/country_ipv6.txt | sort | uniq | cidr-merger -s > ../cnipdb/country_ipv6.txt
     cat ../cnipdb/country_ipv4.txt ../cnipdb/country_ipv6.txt > ../cnipdb/country_ipv4_6.txt
-    GIT_STATUS=($(git status | grep 'country_ipv' | cut -d ' ' -f 6 | grep "txt" | cut -d '/' -f 1-2 | sed 's/cnipdb_//g;s/country_//g;s/.txt//g' | awk "{ print $2 }"))
+    GIT_STATUS=($(git status -s | grep 'country_ipv' | cut -d ' ' -f 3 | grep "txt" | cut -d '/' -f 2-3 | sed 's/cnipdb_//g;s/country_//g;s/.txt//g' | awk "{ print $2 }"))
     for GIT_STATUS_TASK in "${!GIT_STATUS[@]}"; do
         geoip -c "https://raw.githubusercontent.com/hezhijie0327/CNIPDb/source/script/${GIT_STATUS[$GIT_STATUS_TASK]}.json"
     done
@@ -275,22 +275,22 @@ EnvironmentPreparation
 # Call GetDataFromBGP
 GetDataFromBGP
 # Call GetDataFromCZ88dotnet
-GetDataFromCZ88dotnet
+#GetDataFromCZ88dotnet
 # Call GetDataFromDBIP
-GetDataFromDBIP
+#GetDataFromDBIP
 # Call GetDataFromGeoLite2
-GetDataFromGeoLite2
+#GetDataFromGeoLite2
 # Call GetDataFromIANA
-GetDataFromIANA
+#GetDataFromIANA
 # Call GetDataFromIP2Location
-GetDataFromIP2Location
+#GetDataFromIP2Location
 # Cal GetDataFromIPdeny
-GetDataFromIPdeny
+#GetDataFromIPdeny
 # Call GetDataFromIPIPdotNET
-GetDataFromIPIPdotNET
+#GetDataFromIPIPdotNET
 # Call GetDataFromIPtoASN
-GetDataFromIPtoASN
+#GetDataFromIPtoASN
 # Call GetDataFromVXLINK
-GetDataFromVXLINK
+#GetDataFromVXLINK
 # Call EnvironmentCleanup
 EnvironmentCleanup
