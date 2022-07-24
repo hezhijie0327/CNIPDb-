@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.8.0
+# Current Version: 1.8.1
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -8,8 +8,12 @@
 ## Function
 # Environment Preparation
 function EnvironmentPreparation() {
+    export CLEANUP="true"
     export DEBIAN_FRONTEND="noninteractive"
     export PATH="/root/.cargo/bin:/root/go/bin:$PATH"
+    if [ "${CLEANUP}" == "true" ]; then
+        rm -rf ./cnipdb*
+    fi
     rm -rf ./Temp && mkdir ./Temp && cd ./Temp
     go install github.com/zhanhb/cidr-merger@latest
     go install github.com/Loyalsoldier/geoip@latest
@@ -275,22 +279,22 @@ EnvironmentPreparation
 # Call GetDataFromBGP
 GetDataFromBGP
 # Call GetDataFromCZ88dotnet
-#GetDataFromCZ88dotnet
+GetDataFromCZ88dotnet
 # Call GetDataFromDBIP
-#GetDataFromDBIP
+GetDataFromDBIP
 # Call GetDataFromGeoLite2
-#GetDataFromGeoLite2
+GetDataFromGeoLite2
 # Call GetDataFromIANA
-#GetDataFromIANA
+GetDataFromIANA
 # Call GetDataFromIP2Location
-#GetDataFromIP2Location
+GetDataFromIP2Location
 # Cal GetDataFromIPdeny
-#GetDataFromIPdeny
+GetDataFromIPdeny
 # Call GetDataFromIPIPdotNET
-#GetDataFromIPIPdotNET
+GetDataFromIPIPdotNET
 # Call GetDataFromIPtoASN
-#GetDataFromIPtoASN
+GetDataFromIPtoASN
 # Call GetDataFromVXLINK
-#GetDataFromVXLINK
+GetDataFromVXLINK
 # Call EnvironmentCleanup
 EnvironmentCleanup
