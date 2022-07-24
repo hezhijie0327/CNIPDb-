@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.9.0
+# Current Version: 1.9.1
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -204,7 +204,7 @@ function GetDataFromIP2Region() {
     for ip2region_url_task in "${!ip2region_url[@]}"; do
         curl -s --connect-timeout 15 "${ip2region_url[$ip2region_url_task]}" >> ./ip2region_country_ipv4_6.tmp
     done
-    ip2region_country_ipv4_data=($(cat ./ip2region_country_ipv4_6.tmp | grep '中国' | cut -d '|' -f 1,2 | sed 's/|ip2region/g' | sort | uniq | awk "{ print $2 }"))
+    ip2region_country_ipv4_data=($(cat ./ip2region_country_ipv4_6.tmp | grep '中国' | grep -v "澳门\|台湾\|香港" | cut -d '|' -f 1,2 | sed 's/|ip2region/g' | sort | uniq | awk "{ print $2 }"))
     for ip2region_country_ipv4_data_task in "${!ip2region_country_ipv4_data[@]}"; do
         echo "${ip2region_country_ipv4_data[$ip2region_country_ipv4_data_task]}" >> ./ip2region_country_ipv4.tmp
     done
