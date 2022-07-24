@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.8.5
+# Current Version: 1.8.6
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -9,7 +9,7 @@
 # Environment Preparation
 function EnvironmentPreparation() {
     export DEBIAN_FRONTEND="noninteractive"
-    export PATH="/root/.cargo/bin:/root/go/bin:$PATH"
+    export PATH="/root/go/bin:$PATH"
     rm -rf ./Temp && mkdir ./Temp && cd ./Temp
     go install github.com/zhanhb/cidr-merger@latest
     go install github.com/Loyalsoldier/geoip@latest
