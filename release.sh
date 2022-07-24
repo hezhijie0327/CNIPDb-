@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.8.2
+# Current Version: 1.8.3
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -8,12 +8,8 @@
 ## Function
 # Environment Preparation
 function EnvironmentPreparation() {
-    export CLEANUP="false"
     export DEBIAN_FRONTEND="noninteractive"
     export PATH="/root/.cargo/bin:/root/go/bin:$PATH"
-    if [ "${CLEANUP}" == "true" ]; then
-        rm -rf ./cnipdb*
-    fi
     rm -rf ./Temp && mkdir ./Temp && cd ./Temp
     go install github.com/zhanhb/cidr-merger@latest
     go install github.com/Loyalsoldier/geoip@latest
