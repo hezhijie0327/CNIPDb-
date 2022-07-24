@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.8.7
+# Current Version: 1.8.8
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -275,22 +275,22 @@ EnvironmentPreparation
 # Call GetDataFromBGP
 GetDataFromBGP
 # Call GetDataFromCZ88dotnet
-#GetDataFromCZ88dotnet
+GetDataFromCZ88dotnet
 # Call GetDataFromDBIP
-#GetDataFromDBIP
+GetDataFromDBIP
 # Call GetDataFromGeoLite2
-#GetDataFromGeoLite2
+GetDataFromGeoLite2
 # Call GetDataFromIANA
-#GetDataFromIANA
+GetDataFromIANA
 # Call GetDataFromIP2Location
-#GetDataFromIP2Location
+GetDataFromIP2Location
 # Cal GetDataFromIPdeny
-#GetDataFromIPdeny
+GetDataFromIPdeny
 # Call GetDataFromIPIPdotNET
-#GetDataFromIPIPdotNET
+GetDataFromIPIPdotNET
 # Call GetDataFromIPtoASN
-#GetDataFromIPtoASN
+GetDataFromIPtoASN
 # Call GetDataFromVXLINK
-#GetDataFromVXLINK
+GetDataFromVXLINK
 # Call EnvironmentCleanup
 EnvironmentCleanup
