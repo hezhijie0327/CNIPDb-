@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.7.6
+# Current Version: 1.7.7
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -16,7 +16,10 @@ function EnvironmentPreparation() {
 }
 # Environment Cleanup
 function EnvironmentCleanup() {
-    geoip -c "https://raw.githubusercontent.com/hezhijie0327/CNIPDb/source/config.json"
+    GIT_STATUS=($(git status | grep 'country_ipv' | cut -d ' ' -f 6 | grep "txt" | cut -d '/' -f 2-3 | sed 's/cnipdb_//g;s/country_//g;s/.txt//g' | awk "{ print $2 }"))
+    for GIT_STATUS_TASK in "${!GIT_STATUS[@]}"; do
+        geoip -c "https://raw.githubusercontent.com/hezhijie0327/CNIPDb/source/script/${GIT_STATUS[$GIT_STATUS_TASK]}.json"
+    done
     cd .. && rm -rf ./Temp
 }
 # Get Data from BGP
