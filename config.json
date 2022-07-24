@@ -3,14 +3,6 @@
     {
       "action": "add",
       "args": {
-        "name": "cnipdb",
-        "uri": "../cnipdb/country_ipv4_6.txt"
-      },
-      "type": "text"
-    },
-    {
-      "action": "add",
-      "args": {
         "name": "bgp",
         "uri": "../cnipdb_bgp/country_ipv4_6.txt"
       },
@@ -90,76 +82,6 @@
     }
   ],
   "output": [
-    {
-      "action": "output",
-      "args": {
-        "outputDir": "../cnipdb",
-        "outputName": "country_ipv4_6.dat",
-        "wantedList": [
-          "cnipdb"
-        ]
-      },
-      "type": "v2rayGeoIPDat"
-    },
-    {
-      "action": "output",
-      "args": {
-        "onlyIPType": "ipv4",
-        "outputDir": "../cnipdb",
-        "outputName": "country_ipv4.dat",
-        "wantedList": [
-          "cnipdb"
-        ]
-      },
-      "type": "v2rayGeoIPDat"
-    },
-    {
-      "action": "output",
-      "args": {
-        "onlyIPType": "ipv6",
-        "outputDir": "../cnipdb",
-        "outputName": "country_ipv6.dat",
-        "wantedList": [
-          "cnipdb"
-        ]
-      },
-      "type": "v2rayGeoIPDat"
-    },
-    {
-      "action": "output",
-      "args": {
-        "outputDir": "../cnipdb",
-        "outputName": "country_ipv4_6.mmdb",
-        "wantedList": [
-          "cnipdb"
-        ]
-      },
-      "type": "maxmindMMDB"
-    },
-    {
-      "action": "output",
-      "args": {
-        "onlyIPType": "ipv4",
-        "outputDir": "../cnipdb",
-        "outputName": "country_ipv4.mmdb",
-        "wantedList": [
-          "cnipdb"
-        ]
-      },
-      "type": "maxmindMMDB"
-    },
-    {
-      "action": "output",
-      "args": {
-        "onlyIPType": "ipv6",
-        "outputDir": "../cnipdb",
-        "outputName": "country_ipv6.mmdb",
-        "wantedList": [
-          "cnipdb"
-        ]
-      },
-      "type": "maxmindMMDB"
-    },
     {
       "action": "output",
       "args": {
