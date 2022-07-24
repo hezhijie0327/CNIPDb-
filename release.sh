@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.7.5
+# Current Version: 1.7.6
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -10,15 +10,12 @@
 function EnvironmentPreparation() {
     export DEBIAN_FRONTEND="noninteractive"
     export PATH="/root/.cargo/bin:/root/go/bin:$PATH"
-    rm -rf ./Temp ./cnipdb ./cnipdb_* && mkdir ./Temp ./cnipdb && cd ./Temp
+    rm -rf ./Temp ./cnipdb* && mkdir ./Temp ./cnipdb && cd ./Temp
     go install github.com/zhanhb/cidr-merger@latest
     go install github.com/Loyalsoldier/geoip@latest
 }
 # Environment Cleanup
 function EnvironmentCleanup() {
-    cat ../cnipdb_*/country_ipv4.txt | sort | uniq | cidr-merger -s > ../cnipdb/country_ipv4.txt
-    cat ../cnipdb_*/country_ipv6.txt | sort | uniq | cidr-merger -s > ../cnipdb/country_ipv6.txt
-    cat ../cnipdb/country_ipv4.txt ../cnipdb/country_ipv6.txt > ../cnipdb/country_ipv4_6.txt
     geoip -c "https://raw.githubusercontent.com/hezhijie0327/CNIPDb/source/config.json"
     cd .. && rm -rf ./Temp
 }
