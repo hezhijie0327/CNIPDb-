@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.9.2
+# Current Version: 1.9.3
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -16,6 +16,10 @@ function EnvironmentPreparation() {
 }
 # Environment Cleanup
 function EnvironmentCleanup() {
+    rm -rf ../cnipdb_zjdb/country_ipv*.txt && mkdir -p ../cnipdb_zjdb
+    cat ../cnipdb_*/country_ipv4.txt | sort | uniq -c | awk '{ if ( $1 > 1 ) { print $0 } }' | awk '{ print $2 }' | cidr-merger -s > ../cnipdb_zjdb/country_ipv4.txt
+    cat ../cnipdb_*/country_ipv6.txt | sort | uniq -c | awk '{ if ( $1 > 1 ) { print $0 } }' | awk '{ print $2 }' | cidr-merger -s > ../cnipdb_zjdb/country_ipv6.txt
+    cat ../cnipdb_zjdb/country_ipv4.txt ../cnipdb_zjdb/country_ipv6.txt > ../cnipdb_zjdb/country_ipv4_6.txt
     GIT_STATUS=($(git status -s | grep "A\|M\|\?" | grep 'country_ipv' | cut -d ' ' -f 3 | grep "txt" | cut -d '/' -f 2-3 | sed 's/cnipdb_//g;s/country_//g;s/.txt//g' | awk "{ print $2 }"))
     for GIT_STATUS_TASK in "${!GIT_STATUS[@]}"; do
         geoip -c "https://raw.githubusercontent.com/hezhijie0327/CNIPDb/source/script/${GIT_STATUS[$GIT_STATUS_TASK]}.json"
