@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.9.5
+# Current Version: 1.9.6
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -16,45 +16,6 @@ function EnvironmentPreparation() {
 }
 # Environment Cleanup
 function EnvironmentCleanup() {
-    ZJDBIP_SOURCE=(
-        "bgp"
-        "cz88dotnet"
-        "geolite2"
-        "ipipdotnet"
-        "vxlink"
-    )
-    if [ "${#ZJDBIP_SOURCE[@]}" -gt 0 ]; then
-        ZJDBIP_SOURCE_IPv4="" && ZJDBIP_SOURCE_IPv6="" && for ZJDBIP_SOURCE_TASK in "${!ZJDBIP_SOURCE[@]}"; do
-            if [ -f "../cnipdb_${ZJDBIP_SOURCE[$ZJDBIP_SOURCE_TASK]}/country_ipv4.txt" ]; then
-                ZJDBIP_SOURCE_IPv4="${ZJDBIP_SOURCE_IPv4}../cnipdb_${ZJDBIP_SOURCE[$ZJDBIP_SOURCE_TASK]}/country_ipv4.txt "
-            fi
-            if [ -f "../cnipdb_${ZJDBIP_SOURCE[$ZJDBIP_SOURCE_TASK]}/country_ipv6.txt" ]; then
-                ZJDBIP_SOURCE_IPv6="${ZJDBIP_SOURCE_IPv6}../cnipdb_${ZJDBIP_SOURCE[$ZJDBIP_SOURCE_TASK]}/country_ipv6.txt "
-            fi
-            ZJDBIP_SOURCE_IPv4=$(echo "${ZJDBIP_SOURCE_IPv4}" | sed "s/^\ //g")
-            ZJDBIP_SOURCE_IPv6=$(echo "${ZJDBIP_SOURCE_IPv6}" | sed "s/^\ //g")
-        done
-        rm -rf ../cnipdb_zjdb/country_ipv*.txt && mkdir -p ../cnipdb_zjdb
-        cat ../cnipdb_*/country_ipv4.txt | sort | uniq -c | awk '{ if ( $1 > 1 ) { print $0 } }' | awk '{ print $2 }' | cidr-merger -s > ./zjdb_country_ipv4.tmp
-        cat ../cnipdb_*/country_ipv6.txt | sort | uniq -c | awk '{ if ( $1 > 1 ) { print $0 } }' | awk '{ print $2 }' | cidr-merger -s > ./zjdb_country_ipv6.tmp
-        cat ./zjdb_country_ipv4.tmp ${ZJDBIP_SOURCE_IPv4} | sort | uniq | cidr-merger -s > ../cnipdb_zjdb/country_ipv4.txt
-        cat ./zjdb_country_ipv6.tmp ${ZJDBIP_SOURCE_IPv6} | sort | uniq | cidr-merger -s > ../cnipdb_zjdb/country_ipv6.txt
-    else
-        ZJDBIP_SOURCE=($(ls ../ | grep 'cnipdb_' | grep -v "cnipdb_zjdb" | awk "{ print $2 }"))
-        ZJDBIP_SOURCE_IPv4="" && ZJDBIP_SOURCE_IPv6="" && for ZJDBIP_SOURCE_TASK in "${!ZJDBIP_SOURCE[@]}"; do
-            if [ -f "../${ZJDBIP_SOURCE[$ZJDBIP_SOURCE_TASK]}/country_ipv4.txt" ]; then
-                ZJDBIP_SOURCE_IPv4="${ZJDBIP_SOURCE_IPv4}../${ZJDBIP_SOURCE[$ZJDBIP_SOURCE_TASK]}/country_ipv4.txt "
-            fi
-            if [ -f "../${ZJDBIP_SOURCE[$ZJDBIP_SOURCE_TASK]}/country_ipv6.txt" ]; then
-                ZJDBIP_SOURCE_IPv6="${ZJDBIP_SOURCE_IPv6}../${ZJDBIP_SOURCE[$ZJDBIP_SOURCE_TASK]}/country_ipv6.txt "
-            fi
-            ZJDBIP_SOURCE_IPv4=$(echo "${ZJDBIP_SOURCE_IPv4}" | sed "s/^\ //g")
-            ZJDBIP_SOURCE_IPv6=$(echo "${ZJDBIP_SOURCE_IPv6}" | sed "s/^\ //g")
-        done
-        rm -rf ../cnipdb_zjdb/country_ipv*.txt && mkdir -p ../cnipdb_zjdb
-        cat ${ZJDBIP_SOURCE_IPv4} | sort | uniq | cidr-merger -s > ../cnipdb_zjdb/country_ipv4.txt
-        cat ${ZJDBIP_SOURCE_IPv6} | sort | uniq | cidr-merger -s > ../cnipdb_zjdb/country_ipv6.txt
-    fi && cat ../cnipdb_zjdb/country_ipv4.txt ../cnipdb_zjdb/country_ipv6.txt > ../cnipdb_zjdb/country_ipv4_6.txt
     GIT_STATUS=($(git status -s | grep "A\|M\|\?" | grep 'country_ipv' | cut -d ' ' -f 3 | grep "txt" | cut -d '/' -f 2-3 | sed 's/cnipdb_//g;s/country_//g;s/.txt//g' | awk "{ print $2 }"))
     for GIT_STATUS_TASK in "${!GIT_STATUS[@]}"; do
         geoip -c "https://raw.githubusercontent.com/hezhijie0327/CNIPDb/source/script/${GIT_STATUS[$GIT_STATUS_TASK]}.json"
