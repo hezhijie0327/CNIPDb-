@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.9.3
+# Current Version: 1.9.4
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -16,9 +16,28 @@ function EnvironmentPreparation() {
 }
 # Environment Cleanup
 function EnvironmentCleanup() {
+    TRUST_CNIP_SOURCE=(
+        "bgp"
+        "cz88dotnet"
+        "geolite2"
+        "ipipdotnet"
+        "vxlink"
+    )
+    TRUST_CNIP_SOURCE_IPv4="" && TRUST_CNIP_SOURCE_IPv6="" && for TRUST_CNIP_SOURCE_TASK in "${!TRUST_CNIP_SOURCE[@]}"; do
+        if [ -f "../cnipdb_${TRUST_CNIP_SOURCE[$TRUST_CNIP_SOURCE_TASK]}/country_ipv4.txt" ]; then
+            TRUST_CNIP_SOURCE_IPv4="${TRUST_CNIP_SOURCE_IPv4}../cnipdb_${TRUST_CNIP_SOURCE[$TRUST_CNIP_SOURCE_TASK]}/country_ipv4.txt "
+        fi
+        if [ -f "../cnipdb_${TRUST_CNIP_SOURCE[$TRUST_CNIP_SOURCE_TASK]}/country_ipv6.txt" ]; then
+            TRUST_CNIP_SOURCE_IPv6="${TRUST_CNIP_SOURCE_IPv6}../cnipdb_${TRUST_CNIP_SOURCE[$TRUST_CNIP_SOURCE_TASK]}/country_ipv6.txt "
+        fi
+        TRUST_CNIP_SOURCE_IPv4=$(echo "${TRUST_CNIP_SOURCE_IPv4}" | sed "s/^\ //g")
+        TRUST_CNIP_SOURCE_IPv6=$(echo "${TRUST_CNIP_SOURCE_IPv6}" | sed "s/^\ //g")
+    done
     rm -rf ../cnipdb_zjdb/country_ipv*.txt && mkdir -p ../cnipdb_zjdb
-    cat ../cnipdb_*/country_ipv4.txt | sort | uniq -c | awk '{ if ( $1 > 1 ) { print $0 } }' | awk '{ print $2 }' | cidr-merger -s > ../cnipdb_zjdb/country_ipv4.txt
-    cat ../cnipdb_*/country_ipv6.txt | sort | uniq -c | awk '{ if ( $1 > 1 ) { print $0 } }' | awk '{ print $2 }' | cidr-merger -s > ../cnipdb_zjdb/country_ipv6.txt
+    cat ../cnipdb_*/country_ipv4.txt | sort | uniq -c | awk '{ if ( $1 > 1 ) { print $0 } }' | awk '{ print $2 }' | cidr-merger -s > ./zjdb_country_ipv4.tmp
+    cat ../cnipdb_*/country_ipv6.txt | sort | uniq -c | awk '{ if ( $1 > 1 ) { print $0 } }' | awk '{ print $2 }' | cidr-merger -s > ./zjdb_country_ipv6.tmp
+    cat ./zjdb_country_ipv4.tmp ${TRUST_CNIP_SOURCE_IPv4} | sort | uniq | cidr-merger -s > ../cnipdb_zjdb/country_ipv4.txt
+    cat ./zjdb_country_ipv6.tmp ${TRUST_CNIP_SOURCE_IPv6} | sort | uniq | cidr-merger -s > ../cnipdb_zjdb/country_ipv6.txt
     cat ../cnipdb_zjdb/country_ipv4.txt ../cnipdb_zjdb/country_ipv6.txt > ../cnipdb_zjdb/country_ipv4_6.txt
     GIT_STATUS=($(git status -s | grep "A\|M\|\?" | grep 'country_ipv' | cut -d ' ' -f 3 | grep "txt" | cut -d '/' -f 2-3 | sed 's/cnipdb_//g;s/country_//g;s/.txt//g' | awk "{ print $2 }"))
     for GIT_STATUS_TASK in "${!GIT_STATUS[@]}"; do
