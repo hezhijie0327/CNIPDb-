@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 1.9.6
+# Current Version: 1.9.7
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -9,7 +9,7 @@
 # Environment Preparation
 function EnvironmentPreparation() {
     export DEBIAN_FRONTEND="noninteractive"
-    export PATH="/root/go/bin:$PATH"
+    export PATH="$PATH:/root/go/bin"
     rm -rf ./Temp && mkdir ./Temp && cd ./Temp
     go install github.com/zhanhb/cidr-merger@latest
     go install github.com/Loyalsoldier/geoip@latest
@@ -57,7 +57,7 @@ function GetDataFromBTPanel() {
     for btpanel_country_ipv4_data_task in "${!btpanel_country_ipv4_data[@]}"; do
         echo "${btpanel_country_ipv4_data[$btpanel_country_ipv4_data_task]}" >> ./btpanel_country_ipv4.tmp
     done
-    mkdir ../cnipdb_btpanel
+    mkdir -p ../cnipdb_btpanel
     cat ./btpanel_country_ipv4.tmp | sort | uniq | cidr-merger -s > ../cnipdb_btpanel/country_ipv4.txt
 }
 # Get Data from CZ88dotnet
