@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 2.0.1
+# Current Version: 2.0.2
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -9,6 +9,7 @@
 # Environment Preparation
 function EnvironmentPreparation() {
     export DEBIAN_FRONTEND="noninteractive"
+    export PATH="/home/runner/go/bin:$PATH"
     rm -rf ./Temp && mkdir ./Temp && cd ./Temp
 }
 # Environment Cleanup
