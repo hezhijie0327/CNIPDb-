@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 2.0.6
+# Current Version: 2.0.7
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -25,7 +25,7 @@ function EnvironmentCleanup() {
         ZJDBIP_SOURCE_IPv4=$(echo "${ZJDBIP_SOURCE_IPv4}" | sed "s/^\ //g")
         ZJDBIP_SOURCE_IPv6=$(echo "${ZJDBIP_SOURCE_IPv6}" | sed "s/^\ //g")
     done
-    rm -rf ../cnipdb_zjdb/country_ipv*.txt && mkdir -p ../cnipdb_zjdb
+    mkdir -p ../cnipdb_zjdb
     cat ${ZJDBIP_SOURCE_IPv4} | sort | uniq | cidr-merger -s > ../cnipdb_zjdb/country_ipv4.txt
     cat ${ZJDBIP_SOURCE_IPv6} | sort | uniq | cidr-merger -s > ../cnipdb_zjdb/country_ipv6.txt
     cat ../cnipdb_zjdb/country_ipv4.txt ../cnipdb_zjdb/country_ipv6.txt > ../cnipdb_zjdb/country_ipv4_6.txt
