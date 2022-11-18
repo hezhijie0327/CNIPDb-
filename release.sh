@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 2.0.7
+# Current Version: 2.0.8
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -183,12 +183,20 @@ function GetDataFromIP2Location() {
 function GetDataFromIPIPdotNET() {
     ipipdotnet_url=(
         "https://cdn.ipip.net/17mon/country.zip"
+        "https://raw.githubusercontent.com/17mon/china_ip_list/master/china_ip_list.txt"
     )
     for ipipdotnet_url_task in "${!ipipdotnet_url[@]}"; do
-        curl -s --connect-timeout 15 "${ipipdotnet_url[$ipipdotnet_url_task]}" >> ./ipipdotnet_${ipipdotnet_url_task}.zip
-        unzip -o -d . ./ipipdotnet_${ipipdotnet_url_task}.zip && rm -rf ./ipipdotnet_${ipipdotnet_url_task}.zip
+        if [ "$(echo ${ipipdotnet_url[$ipipdotnet_url_task]} | grep '.zip$')" ]; then
+            curl -s --connect-timeout 15 "${ipipdotnet_url[$ipipdotnet_url_task]}" >> ./ipipdotnet_${ipipdotnet_url_task}.zip
+            unzip -o -d . ./ipipdotnet_${ipipdotnet_url_task}.zip && rm -rf ./ipipdotnet_${ipipdotnet_url_task}.zip
+        else
+            curl -s --connect-timeout 15 "${ipipdotnet_url[$ipipdotnet_url_task]}" >> ./ipipdotnet_country_ipv4_6_raw.tmp
+        fi
     done
-    ipipdotnet_country_ipv4_data=($(cat ./country.txt | grep 'CN$' | cut -f 1 | sort | uniq | awk "{ print $2 }"))
+    ipipdotnet_country_ipv4_data=(
+        $(cat ./country.txt | grep 'CN$' | cut -f 1 | sort | uniq | awk "{ print $2 }")
+        $(cat ./ipipdotnet_country_ipv4_6_raw.tmp | grep -v "\:" | grep '.' | sort | uniq | awk "{ print $2 }")
+    )
     for ipipdotnet_country_ipv4_data_task in "${!ipipdotnet_country_ipv4_data[@]}"; do
         echo "${ipipdotnet_country_ipv4_data[$ipipdotnet_country_ipv4_data_task]}" >> ./ipipdotnet_country_ipv4.tmp
     done
