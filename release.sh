@@ -1,10 +1,11 @@
 #!/bin/bash
 
-# Current Version: 2.1.0
+# Current Version: 2.1.1
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
 
+## Parameter
 CRUL_OPTION=""
 
 ## Function
