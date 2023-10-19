@@ -1,9 +1,11 @@
 #!/bin/bash
 
-# Current Version: 2.0.9
+# Current Version: 2.1.0
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
+
+CRUL_OPTION=""
 
 ## Function
 # Environment Preparation
@@ -43,7 +45,7 @@ function GetDataFromBGP() {
         "https://raw.githubusercontent.com/misakaio/chnroutes2/master/chnroutes.txt"
     )
     for bgp_url_task in "${!bgp_url[@]}"; do
-        curl -s --connect-timeout 15 "${bgp_url[$bgp_url_task]}" >> ./bgp_country_ipv4_6.tmp
+        curl ${CRUL_OPTION:--s --connect-timeout 15 -L} "${bgp_url[$bgp_url_task]}" >> ./bgp_country_ipv4_6.tmp
     done
     bgp_country_ipv4_data=($(cat ./bgp_country_ipv4_6.tmp | grep -v "\:\|\#" | grep '.' | sort | uniq | awk "{ print $2 }"))
     bgp_country_ipv6_data=($(cat ./bgp_country_ipv4_6.tmp | grep -v "\.\|\#" | grep ':' | sort | uniq | awk "{ print $2 }"))
@@ -64,7 +66,7 @@ function GetDataFromDBIP() {
         "https://download.db-ip.com/free/dbip-country-lite-$(date '+%Y-%m').csv.gz"
     )
     for dbip_url_task in "${!dbip_url[@]}"; do
-        curl -s --connect-timeout 15 "${dbip_url[$dbip_url_task]}" >> ./dbip_${dbip_url_task}.csv.gz
+        curl ${CRUL_OPTION:--s --connect-timeout 15 -L} "${dbip_url[$dbip_url_task]}" >> ./dbip_${dbip_url_task}.csv.gz
         gzip -d ./dbip_${dbip_url_task}.csv.gz && mv ./dbip_${dbip_url_task}.csv ./$(echo ${dbip_url[$dbip_url_task]} | cut -d '/' -f 5 | cut -d '.' -f 1,2)
     done
     dbip_country_ipv4_data=($(cat ./dbip-country-lite-$(date '+%Y-%m').csv | grep 'CN' | cut -d ',' -f 1,2 | tr ',' '-' | grep -v ':' | sort | uniq | awk "{ print $2 }"))
@@ -86,7 +88,7 @@ function GetDataFromGeoLite2() {
         "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-Country-CSV&license_key={GEOLITE2_TOKEN}&suffix=zip"
     )
     for geolite2_url_task in "${!geolite2_url[@]}"; do
-        curl -s --connect-timeout 15 "${geolite2_url[$geolite2_url_task]}" >> ./geolite2_${geolite2_url_task}.zip
+        curl ${CRUL_OPTION:--s --connect-timeout 15 -L} "${geolite2_url[$geolite2_url_task]}" >> ./geolite2_${geolite2_url_task}.zip
         unzip -o -d . ./geolite2_${geolite2_url_task}.zip && rm -rf ./geolite2_${geolite2_url_task}.zip
     done
     geolite2_country_ipv4_data=($(cat ./GeoLite2-Country-CSV_*/GeoLite2-Country-Blocks-IPv4.csv | grep '1814991,1814991' | cut -d ',' -f 1 | sort | uniq | awk "{ print $2 }"))
@@ -117,7 +119,7 @@ function GetDataFromIANA() {
         "https://ftp.ripe.net/ripe/stats/delegated-ripencc-latest"
     )
     for iana_url_task in "${!iana_url[@]}"; do
-        curl -s --connect-timeout 15 "${iana_url[$iana_url_task]}" >> ./iana_url.tmp
+        curl ${CRUL_OPTION:--s --connect-timeout 15 -L} "${iana_url[$iana_url_task]}" >> ./iana_url.tmp
     done
     iana_country_ipv4_data=($(cat ./iana_url.tmp | grep "CN|ipv4" | sort | uniq | awk "{ print $2 }"))
     iana_country_ipv6_data=($(cat ./iana_url.tmp | grep "CN|ipv6" | sort | uniq | awk "{ print $2 }"))
@@ -159,7 +161,7 @@ function GetDataFromIP2Location() {
         "https://www.ip2location.com/download/?token={IP2LOCATION_TOKEN}&file=DB1LITECSV"
     )
     for ip2location_url_task in "${!ip2location_url[@]}"; do
-        curl -s --connect-timeout 15 "${ip2location_url[$ip2location_url_task]}" >> ./ip2location_${ip2location_url_task}.zip
+        curl ${CRUL_OPTION:--s --connect-timeout 15 -L} "${ip2location_url[$ip2location_url_task]}" >> ./ip2location_${ip2location_url_task}.zip
         unzip -o -d . ./ip2location_${ip2location_url_task}.zip && rm -rf ./ip2location_${ip2location_url_task}.zip
     done
     ip2location_country_ipv4_data=($(cat ./IP2LOCATION-LITE-DB1.CSV | grep '"CN","China"' | cut -d ',' -f 1,2 | tr -d '"' | tr ',' '-' | sort | uniq | awk "{ print $2 }"))
@@ -185,7 +187,7 @@ function GetDataFromIPinfoio() {
         "https://ipinfo.io/data/free/country.csv.gz?token={IPINFOIO_TOKEN}"
     )
     for ipinfoio_url_task in "${!ipinfoio_url[@]}"; do
-        curl -s --connect-timeout 15 "${ipinfoio_url[$ipinfoio_url_task]}" >> ./ipinfoio_${ipinfoio_url_task}.csv.gz
+        curl ${CRUL_OPTION:--s --connect-timeout 15 -L} "${ipinfoio_url[$ipinfoio_url_task]}" >> ./ipinfoio_${ipinfoio_url_task}.csv.gz
         gzip -d ./ipinfoio_${ipinfoio_url_task}.csv.gz
     done
     ipinfoio_country_ipv4_data=($(cat ./ipinfoio_*.csv | grep 'CN' | cut -d ',' -f 1,2 | tr ',' '-' | grep -v ':' | sort | uniq | awk "{ print $2 }"))
@@ -209,10 +211,10 @@ function GetDataFromIPIPdotNET() {
     )
     for ipipdotnet_url_task in "${!ipipdotnet_url[@]}"; do
         if [ "$(echo ${ipipdotnet_url[$ipipdotnet_url_task]} | grep '.zip$')" ]; then
-            curl -s --connect-timeout 15 "${ipipdotnet_url[$ipipdotnet_url_task]}" >> ./ipipdotnet_${ipipdotnet_url_task}.zip
+            curl ${CRUL_OPTION:--s --connect-timeout 15 -L} "${ipipdotnet_url[$ipipdotnet_url_task]}" >> ./ipipdotnet_${ipipdotnet_url_task}.zip
             unzip -o -d . ./ipipdotnet_${ipipdotnet_url_task}.zip && rm -rf ./ipipdotnet_${ipipdotnet_url_task}.zip
         else
-            curl -s --connect-timeout 15 "${ipipdotnet_url[$ipipdotnet_url_task]}" >> ./ipipdotnet_country_ipv4_6_raw.tmp
+            curl ${CRUL_OPTION:--s --connect-timeout 15 -L} "${ipipdotnet_url[$ipipdotnet_url_task]}" >> ./ipipdotnet_country_ipv4_6_raw.tmp
         fi
     done
     ipipdotnet_country_ipv4_data=(
@@ -232,7 +234,7 @@ function GetDataFromIPtoASN() {
         "https://iptoasn.com/data/ip2country-v6.tsv.gz"
     )
     for iptoasn_url_task in "${!iptoasn_url[@]}"; do
-        curl -s --connect-timeout 15 "${iptoasn_url[$iptoasn_url_task]}" >> ./iptoasn_${iptoasn_url_task}.tsv.gz
+        curl ${CRUL_OPTION:--s --connect-timeout 15 -L} "${iptoasn_url[$iptoasn_url_task]}" >> ./iptoasn_${iptoasn_url_task}.tsv.gz
         gzip -d ./iptoasn_${iptoasn_url_task}.tsv.gz && mv ./iptoasn_${iptoasn_url_task}.tsv ./$(echo ${iptoasn_url[$iptoasn_url_task]} | cut -d '/' -f 5 | cut -d '.' -f 1,2)
     done
     iptoasn_country_ipv4_data=($(cat ./ip2country-v4.tsv | grep 'CN' | cut -f 1,2 | tr '\t' '-' | sort | uniq | awk "{ print $2 }"))
@@ -255,7 +257,7 @@ function GetDataFromVXLINK() {
         "https://raw.githubusercontent.com/tmplink/IPDB/main/ipv6/cidr/CN.txt"
     )
     for vxlink_url_task in "${!vxlink_url[@]}"; do
-        curl -s --connect-timeout 15 "${vxlink_url[$vxlink_url_task]}" >> ./vxlink_country_ipv4_6.tmp
+        curl ${CRUL_OPTION:--s --connect-timeout 15 -L} "${vxlink_url[$vxlink_url_task]}" >> ./vxlink_country_ipv4_6.tmp
     done
     vxlink_country_ipv4_data=($(cat ./vxlink_country_ipv4_6.tmp | grep -v "\:" | grep '.' | sort | uniq | awk "{ print $2 }"))
     vxlink_country_ipv6_data=($(cat ./vxlink_country_ipv4_6.tmp | grep -v "\." | grep ':' | sort | uniq | awk "{ print $2 }"))
