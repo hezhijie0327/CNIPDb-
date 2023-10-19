@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Current Version: 2.0.8
+# Current Version: 2.0.9
 
 ## How to get and use?
 # git clone "https://github.com/hezhijie0327/CNIPDb.git" && bash ./CNIPDb/release.sh
@@ -179,6 +179,28 @@ function GetDataFromIP2Location() {
     cat ./ip2location_country_ipv6.tmp | sort | uniq | cidr-merger -s | grep -v '^::ffff:' > ../cnipdb_ip2location/country_ipv6.txt
     cat ../cnipdb_ip2location/country_ipv4.txt ../cnipdb_ip2location/country_ipv6.txt > ../cnipdb_ip2location/country_ipv4_6.txt
 }
+# Get Data from IPinfo.io
+function GetDataFromIPinfoio() {
+    ipinfoio_url=(
+        "https://ipinfo.io/data/free/country.csv.gz?token={IPINFOIO_TOKEN}"
+    )
+    for ipinfoio_url_task in "${!ipinfoio_url[@]}"; do
+        curl -s --connect-timeout 15 "${ipinfoio_url[$ipinfoio_url_task]}" >> ./ipinfoio_${ipinfoio_url_task}.csv.gz
+        gzip -d ./ipinfoio_${ipinfoio_url_task}.csv.gz
+    done
+    ipinfoio_country_ipv4_data=($(cat ./ipinfoio_*.csv | grep 'CN' | cut -d ',' -f 1,2 | tr ',' '-' | grep -v ':' | sort | uniq | awk "{ print $2 }"))
+    ipinfoio_country_ipv6_data=($(cat ./ipinfoio_*.csv | grep 'CN' | cut -d ',' -f 1,2 | tr ',' '-' | grep ':' | sort | uniq | awk "{ print $2 }"))
+    for ipinfoio_country_ipv4_data_task in "${!ipinfoio_country_ipv4_data[@]}"; do
+        echo "${ipinfoio_country_ipv4_data[$ipinfoio_country_ipv4_data_task]}" >> ./ipinfoio_country_ipv4.tmp
+    done
+    for ipinfoio_country_ipv6_data_task in "${!ipinfoio_country_ipv6_data[@]}"; do
+        echo "${ipinfoio_country_ipv6_data[$ipinfoio_country_ipv6_data_task]}" >> ./ipinfoio_country_ipv6.tmp
+    done
+    mkdir -p ../cnipdb_ipinfoio
+    cat ./ipinfoio_country_ipv4.tmp | sort | uniq | cidr-merger -s > ../cnipdb_ipinfoio/country_ipv4.txt
+    cat ./ipinfoio_country_ipv6.tmp | sort | uniq | cidr-merger -s > ../cnipdb_ipinfoio/country_ipv6.txt
+    cat ../cnipdb_ipinfoio/country_ipv4.txt ../cnipdb_ipinfoio/country_ipv6.txt > ../cnipdb_ipinfoio/country_ipv4_6.txt
+}
 # Get Data from IPIPdotNET
 function GetDataFromIPIPdotNET() {
     ipipdotnet_url=(
@@ -262,6 +284,8 @@ GetDataFromGeoLite2
 GetDataFromIANA
 # Call GetDataFromIP2Location
 GetDataFromIP2Location
+# Call GetDataFromIPinfoio
+GetDataFromIPinfoio
 # Call GetDataFromIPIPdotNET
 GetDataFromIPIPdotNET
 # Call GetDataFromIPtoASN
